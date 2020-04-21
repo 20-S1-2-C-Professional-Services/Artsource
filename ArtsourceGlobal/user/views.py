@@ -14,7 +14,7 @@ from PIL import Image
 
 from .models import EmailVerifyRecord
 from artworkpage.models import Artwork
-from artworkpage.Image_tools import resize
+from artworkpage.Image_tools import crop
 # from PIL import Image
 
 
@@ -372,15 +372,12 @@ def upload_artwork(request):
             image = upload_form.cleaned_data['image']
             artwork.image = image
 
-
-            thumb = resize(Image.open(upload_form.cleaned_data['image']))
+            thumb = crop(Image.open(upload_form.cleaned_data['image']))
             thumb_io = io.BytesIO()
             thumb.save(thumb_io, format='JPEG')
             thumb_file = InMemoryUploadedFile(thumb_io, None, '{}.jpg'.format(artwork.name), 'image/jpeg',
                                               thumb_io.getbuffer().nbytes, None)
-
             artwork.thumbnail = thumb_file
-
 
             artwork.user = user
             artwork.save()
