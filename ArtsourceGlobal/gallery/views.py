@@ -12,7 +12,9 @@ def index(request):
         artwork = [Artwork.objects.all()[i] for i in sample]
     else:
         artwork = Artwork.objects.all()
-    return render(request, 'gallery/index.html', {'artwork': artwork})
+
+    last = Artwork.objects.all().reverse()[0:1]
+    return render(request, 'gallery/index.html', {'artwork': artwork, 'last': last})
 
 
 # def artwork_detail(request, pk):

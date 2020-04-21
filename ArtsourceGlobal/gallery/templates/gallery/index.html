@@ -117,10 +117,10 @@
             {% for a in artwork %}
             <a href="{% url 'artwork_detail' pk=a.pk %}">
             <div class="grid-item card" style="border-radius:10px">
-                <img class="img-responsive" alt="" src="{{a.artwork_image.url}}">
+                <img class="img-responsive" alt="" src="{{a.image.url}}">
                 <img id="user_icon" src="https://s3.amazonaws.com/assets.mockflow.com/app/wireframepro/company/C8b215466722acad2318d6550ec6ba41c/projects/M04c48b3d3e01110426104e0844475df21533644245264/images/Ma29fbb9ab7553333821b63cc589560711525253841292"
                     style="width:35px;margin:-20px 15px 0px 10px">
-                <font size="5" style="padding: 10px; margin-top:0px;">{{a.title}}</font>
+                <font size="5" style="padding: 10px; margin-top:0px;">{{a.user}}</font>
 
 
                 <div class="thumb1" style="display:inline;margin:-10px 15px 0px 50px;">
@@ -130,6 +130,24 @@
             </div>
             </a>
             {% endfor %}
+
+            {% for a in last %}
+            <a href="{% url 'artwork_detail' pk=a.pk %}">
+            <div class="grid-item card" style="border-radius:10px">
+                <img class="img-responsive" alt="" src="{{a.thumbnail.url}}">
+                <img id="userdasf_icon" src="https://s3.amazonaws.com/assets.mockflow.com/app/wireframepro/company/C8b215466722acad2318d6550ec6ba41c/projects/M04c48b3d3e01110426104e0844475df21533644245264/images/Ma29fbb9ab7553333821b63cc589560711525253841292"
+                    style="width:35px;margin:-20px 15px 0px 10px">
+                <font size="5" style="padding: 10px; margin-top:0px;">{{a.user}}</font>
+
+
+                <div class="thumb1" style="display:inline;margin:-10px 15px 0px 50px;">
+                    <button class="icobutton icobutton--heart" onclick="setThumbID(1);"><span class="fa fa-heart"></span><span class="icobutton__text icobutton__text--side">{{a.likes}}</span></button>
+                </div>
+
+            </div>
+            </a>
+            {% endfor %}
+
 
         </div>
     </div>

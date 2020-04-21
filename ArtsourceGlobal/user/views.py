@@ -1,3 +1,6 @@
+import io
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
 from django.shortcuts import render, HttpResponse, redirect
 
 # Create your views here.
@@ -7,6 +10,7 @@ from user import models
 from .email_send import send_code_email
 from .form import UserForm, RegisterForm, ProfileForm, ResetForm, RetrieveForm, UploadForm
 import hashlib
+from PIL import Image
 
 from .models import EmailVerifyRecord
 from artworkpage.models import Artwork
@@ -367,7 +371,17 @@ def upload_artwork(request):
             artwork.name = upload_form.cleaned_data['name']
             image = upload_form.cleaned_data['image']
             artwork.image = image
-            # artwork.thumbnail = resize(image)
+
+
+            thumb = resize(Image.open(upload_form.cleaned_data['image']))
+            thumb_io = io.BytesIO()
+            thumb.save(thumb_io, format='JPEG')
+            thumb_file = InMemoryUploadedFile(thumb_io, None, '{}.jpg'.format(artwork.name), 'image/jpeg',
+                                              thumb_io.getbuffer().nbytes, None)
+
+            artwork.thumbnail = thumb_file
+
+
             artwork.user = user
             artwork.save()
             return redirect('/user/profile/')
