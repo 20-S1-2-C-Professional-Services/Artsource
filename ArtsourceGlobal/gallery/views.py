@@ -6,8 +6,9 @@ from django.http import HttpResponse
 from artworkpage.models import Artwork
 
 def index(request):
-    artwork = Artwork.objects.all()[1:]
-    return render(request, 'gallery/index.html', {'artwork': artwork})
+    display_artwork = Artwork.objects.all()[1:3]
+    artwork = Artwork.objects.all()[4:]
+    return render(request, 'gallery/index.html', {'artwork': artwork, 'display_artwork': display_artwork})
 
 
 # def artwork_detail(request, pk):
