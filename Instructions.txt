@@ -22,6 +22,12 @@ python manage.py runserver_plus --cert-file cert.crt
 When you have your own certificate:
 python manage.py runserver_plus --cert-file /tmp/cert.crt
 
+if one error occurs, use below three command lines to fix it:
+pip install cryptography 
+pip install pyOpenSSL
+pip install certifi
+
+
 create super user by:
 python manage.py createsuperuser
 

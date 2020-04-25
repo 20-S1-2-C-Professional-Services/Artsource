@@ -14,7 +14,7 @@
                 <meta name="description" content="">
                     <meta name="author" content="">
                         <link rel="shortcut icon" href="{% static 'homepage/img/ASG_logo.png'%}">
-                            <title>Artsource Global</title
+                            <title>Artsource Global</title>
                                 
                                 <!-- Bootstrap core CSS -->
                                 
@@ -66,7 +66,7 @@
                 {% if request.session.is_login %}
                 <li class="">
                     <div class="" style="color: orangered; padding: 2.6rem 1.5rem;">
-                        Hi ! ${session.value}
+                        Hi ! {{ request.session.user_name }} !
                         
                     </div>
                     

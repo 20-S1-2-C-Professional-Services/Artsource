@@ -148,7 +148,7 @@ def register(request):
         #     if i == '1':
         #         print("the form returns integer")
         #     print("the term function")  # i.e. add the term choice to db
-        message = 'Please check the provided information'
+        message = ''
         check_term = request.POST.get('term_check')  # another method to get check box, or can use form.cleaned_data
 
         if check_term == 'on':
@@ -255,7 +255,7 @@ def register(request):
             return render(request, 'user/register.html', {'message': message, 'register_form': stored_form})
     # if request is not valid, return a RegisterForm
     register_form = RegisterForm()
-
+    message = ''
     # render a form with error message
     return render(request, 'user/register.html', locals())
 
