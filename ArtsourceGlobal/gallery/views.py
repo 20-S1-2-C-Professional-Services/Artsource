@@ -6,13 +6,9 @@ from django.http import HttpResponse
 from artworkpage.models import Artwork
 
 def index(request):
-    count = Artwork.objects.count()
-    if count > 10:
-        sample = random.sample(range(count), 10)
-        artwork = [Artwork.objects.all()[i] for i in sample]
-    else:
-        artwork = Artwork.objects.all()
-    return render(request, 'gallery/index.html', {'artwork': artwork})
+    display_artwork = Artwork.objects.all()[1:3]
+    artwork = Artwork.objects.all()[4:]
+    return render(request, 'gallery/index.html', {'artwork': artwork, 'display_artwork': display_artwork})
 
 
 # def artwork_detail(request, pk):

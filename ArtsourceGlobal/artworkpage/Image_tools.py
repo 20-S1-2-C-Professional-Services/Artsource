@@ -1,9 +1,13 @@
 from PIL import Image
 
 
-def resize(img):
-    return img.resize((200, 200))
-
-
+# In future do some math to have the default crop region be centred.
 def crop(img):
-    return img.crop((0, 0, 512, 128))  # (left, upper, right, lower)
+    width, height = img.size
+    aspect_ratio = height/width
+    if(width>height):
+        img = img.resize([int(400/aspect_ratio), 400])
+    else:
+        img = img.resize([600, int(600*aspect_ratio)])
+    return img.crop((0, 0, 600, 400))
+
