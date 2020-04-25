@@ -10,7 +10,11 @@
 {% load staticfiles %}
 {% block title %}Profile{% endblock %}
 {% block css %}
-<!--    <link rel="stylesheet" href="{% static 'css/login.css' %}">-->
+    <link rel="stylesheet" href="{% static 'css/image.css' %}">
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/imglist.js' %}"></script>
 {% endblock %}
 
 
@@ -20,9 +24,9 @@
         <div class="profile-tabs">
            <ul class="nav nav-pills nav-pills-icons justify-content-center" role="tablist">
              <li class="nav-item">
-                 <a class="nav-link" href="#bookedart" role="tab" data-toggle="tab">
+                 <a class="nav-link" href="/user/profile" role="tab" data-toggle="tab">
                    <i class="material-icons">book</i>
-                   Art booked
+                   Your artworks
                  </a>
              </li>
              <li class="nav-item">
@@ -32,9 +36,9 @@
                  </a>
              </li>
              <li class="nav-item">
-                 <a class="nav-link" href="#favorite" role="tab" data-toggle="tab">
+                 <a class="nav-link" href="#bookedart" role="tab" data-toggle="tab">
                    <i class="material-icons">favorite</i>
-                     Favorite
+                     Art booked
                  </a>
              </li>
              <li class="nav-item">
@@ -46,7 +50,32 @@
            </ul>
          </div>
     </div>
+</div>
+<div class="imgLayoutPanel">
+    <li class="imgButtionList">
+        <button id="FourButton" title="Four images each row" onclick="FourImagesOneLine()">
+            4/row
+        </button>
+        <button id="ThreeButton" title="Three images each row" onclick="ThreeImagesOneLine()">
+            3/row
+        </button>
+        <button id="TwoButton" title="Two images each row" onclick="TwoImagesOneLine()">
+            2/row
+        </button>
+    </li>
+</div>
+<div class="imagePage">
+{% if images %}
+    <ul class="imgList">
+        {% for item in images %}
+    <li class="imgItem">
+        <img class="image" id="image4"  src="{{ item }}" ></img>
+    </li>
+    {% endfor %}
+    </ul>
 
+
+{% endif %}
 </div>
 {% endblock %}
 </body>

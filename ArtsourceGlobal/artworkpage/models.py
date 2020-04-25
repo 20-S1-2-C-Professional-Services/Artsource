@@ -9,8 +9,12 @@ class Artwork(models.Model):
     name = models.CharField(max_length=128, unique=True)
     image = models.ImageField(upload_to='Img')
     thumbnail = models.ImageField(upload_to='Thumbnail')
-    user = models.ForeignKey(User, related_name='user', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='artwork_user', on_delete=models.CASCADE)
     objects = models.Manager()
+
+    # url_height = models.PositiveIntegerField(default=75)
+    # url_width = models.PositiveIntegerField(default=75)
+    # image = models.ImageField(upload_to="Img", height_field='url_height', width_field='url_width')
 
     def __str__(self):
         return self.name

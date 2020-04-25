@@ -15,6 +15,8 @@ from PIL import Image
 from .models import EmailVerifyRecord
 from artworkpage.models import Artwork
 from artworkpage.Image_tools import crop
+
+
 # from PIL import Image
 
 
@@ -286,7 +288,15 @@ def hash_code(s, salt='artsource'):
 
 
 def profile(request):
-    return render(request, 'user/profile.html')
+    current_user_name = request.session.get('user_name')
+    user = models.User.objects.get(username=current_user_name)
+    images = []
+    if user.artwork_user is not None:
+        artworks = user.artwork_user.all()
+        for artwork in artworks:
+            images.append(artwork.image.url)
+
+    return render(request, 'user/profile.html', {"images": images})
 
 
 def edit_profile(request):
