@@ -10,67 +10,96 @@ from asg_web_app import settings
 from asg_web_app.settings import oauth
 from user.models import User, AdditionalInfo, Interest
 from user.form import RegisterForm
+import requests
 
 
 # TODO: set up the https to test
-def google(request):
+def instagram(request):
     # The below client id and secret should be changed after you get your own id and secret
-    redirect_uri = 'https://localhost:8000/oauth/google_callback'
-    google = oauth.create_client('google')
-    return google.authorize_redirect(request, redirect_uri)
+    redirect_uri = 'https://localhost:8000/oauth/instagram_callback'
+    url = "https://api.instagram.com/oauth/authorize?client_id=2861822790566791" \
+          "&redirect_uri=" + redirect_uri + "&scope=user_profile&response_type=code"
+
+    return redirect(url)
 
 
-def google_callback(request):
+def instagram_callback(request):
+    message = request.get_full_path()
     print("in the callback")
-    # google = oauth.create_client('google')
-    token = oauth.google.authorize_access_token(request)
-    user = oauth.google.userinfo(request)
-    # do something with the token and profile
-    message = "nothing received"
-    print(request.get_full_path())
-    print("hi")
-    print(token)
-    print(user)
-    return render(request, "oauth/index.html", {'message': message})
+    print("")
+    print("!!!!!!!!!!!1")
+    print("")
+    print("end line")
+
+    code = message.split("code=")[1].split("#_")[0]
+    url = "https://api.instagram.com/oauth/access_token"
+    data = {"client_id": "2861822790566791",
+            "client_secret": "9f6c11ccc2a1076130eaea5104fc7303",
+            "grant_type": "authorization_code",
+            "redirect_uri": "https://localhost:8000/oauth/instagram_callback",
+            "code": code
+            },
+    r = requests.post(url, data=json.dumps(data))
+    print(r)
+    # return redirect(url)
+    json_data = json.loads(r.text)
+    access_token = json_data.get("access_token")
+    print(access_token)
+    user_id = json_data.get("user_id")
+    response = requests.get("https://graph.instagram.com/"+user_id+"?fields=username&access_token="+access_token)
+    username = json.loads(response.text).get("username")
+    message = username
+    register_form = RegisterForm(initial={
+        'username': username,
+    })
+    return render(request, "user/register.html", {'message': message, 'register_form': register_form})
 
 
 def facebook(request):
     # The below client id and secret should be changed after you get your own id and secret
     redirect_uri = 'https://localhost:8000/oauth/facebook_callback'
-    facebook = oauth.create_client('facebook')
-    return facebook.authorize_redirect(request, redirect_uri)
+    url = "https://www.facebook.com/v6.0/dialog/oauth?client_id=1052296011819502" \
+          "&redirect_uri=" + redirect_uri + "&state={\"st=state123abc,ds=123456789}\""
+
+    return redirect(url)
 
 
 def facebook_callback(request):
+    redirect_uri = 'https://localhost:8000/oauth/facebook_callback'
     print("in the facebook callback")
-    # facebook = oauth.create_client('facebook')
-    token = oauth.facebook.authorize_access_token(request)
-    user = oauth.facebook.userinfo(request)
-    # do something with the token and profile
-    message = "nothing received"
-    print(request.get_full_path())
-    print("hi")
-    print(token)
-    print(user)
+    message = request.get_full_path()
+    print(message)
+    print("this is the body")
+    print(request.body)
+    if message.find("code=") != -1:
+        code = message.split("code=")[1].split("&state=")[0]
+        url = "https://graph.facebook.com/v6.0/oauth/access_token?client_id=1052296011819502&" \
+              "&redirect_uri=" + redirect_uri + "&client_secret=fcb79bc8754e158ea251428f90b96248" + \
+              "&code=" + code
+        return redirect(url)
+
+    # resp = oauth.github.get(url='https://api.github.com/user', token=token)
+    #     profile = resp.json()
     return render(request, "oauth/index.html", {'message': message})
 
 
-def github(request):
-    # The below client id and secret should be changed after you get your own id and secret
-    redirect_uri = 'https://localhost:8000/oauth/github_callback'
-    github = oauth.create_client('github')
-    return github.authorize_redirect(request, redirect_uri)
+#
+# def github(request):
+#     # The below client id and secret should be changed after you get your own id and secret
+#     redirect_uri = 'https://localhost:8000/oauth/github_callback'
+#     github = oauth.create_client('github')
+#     return github.authorize_redirect(request, redirect_uri)
+#
+#
+# def github_callback(request):
+#     token = oauth.github.authorize_access_token(request)
+#     resp = oauth.github.get(url='https://api.github.com/user', token=token)
+#     profile = resp.json()
+#     # do something with the token and profile
+#     return redirect(request, profile)
 
 
-def github_callback(request):
-    token = oauth.github.authorize_access_token(request)
-    resp = oauth.github.get(url='https://api.github.com/user', token=token)
-    profile = resp.json()
-    # do something with the token and profile
-    return github_redirect(request, profile)
-
-
-def github_redirect(request, profile):
+def callback_redirect(request, profile):
     message = 'please register your account here!'
     new_user_name = profile['login']
     same_user_name = User.objects.filter(username=new_user_name)
@@ -84,7 +113,7 @@ def github_redirect(request, profile):
         'username': new_user_name,
         'email': email,
     })
-    return render(request, "oauth/oauth_register.html", {'message': message, 'register_form': register_form})
+    return render(request, "user/register.html", {'message': message, 'register_form': register_form})
 
 
 def final_register(request):

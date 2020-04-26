@@ -185,41 +185,41 @@ GOOGLE_CLIENT_SECRET = 'MFSnwDQRxJXq8DaRV3Sv3l3e'
 
 # register the apps
 oauth = OAuth()
-oauth.register(
-    name='google',
-    client_id=GOOGLE_CLIENT_ID,
-    client_secret=GOOGLE_CLIENT_SECRET,
-    access_token_url='https://oauth2.googleapis.com/token',
-    access_token_params=None,
-    authorize_url='https://accounts.google.com/o/oauth2/v2/auth',
-    authorize_params={'access_type': 'offline',
-                      'response_type': 'code'},
-    # api_base_url="https://accounts.google.com/o/oauth2/",
-    # userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
-    client_kwargs={'scope': "https://www.googleapis.com/auth/userinfo.profile"}
-    # "https://www.googleapis.com/auth/userinfo.email"
-)
-
-oauth.register(
-    name='facebook',
-    client_id='1052296011819502',
-    client_secret='fcb79bc8754e158ea251428f90b96248',
-    access_token_url='https://graph.facebook.com/v6.0/oauth/access_token',
-    access_token_params=None,
-    authorize_url='https://www.facebook.com/v6.0/dialog/oauth',
-    authorize_params=None,
-    client_kwargs={'scope': 'user:email'},
-)
-
-oauth.register(
-    name='github',
-    client_id='c5e62cb737afdf029e7b',
-    client_secret='6d6ffbf355a3ecb8c55b5b56d873575ba667fc68',
-    access_token_url='https://github.com/login/oauth/access_token',
-    access_token_params=None,
-    authorize_url='https://github.com/login/oauth/authorize',
-    authorize_params=None,
-    api_base_url='https://api.github.com/',
-    client_kwargs={'scope': 'user:email'},
-)
-
+# oauth.register(
+#     name='google',
+#     client_id=GOOGLE_CLIENT_ID,
+#     client_secret=GOOGLE_CLIENT_SECRET,
+#     access_token_url='https://oauth2.googleapis.com/token',
+#     access_token_params=None,
+#     authorize_url='https://accounts.google.com/o/oauth2/v2/auth',
+#     authorize_params={'access_type': 'offline',
+#                       'response_type': 'code'},
+#     # api_base_url="https://accounts.google.com/o/oauth2/",
+#     # userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',
+#     client_kwargs={'scope': "https://www.googleapis.com/auth/userinfo.profile"}
+#     # "https://www.googleapis.com/auth/userinfo.email"
+# )
+#
+# oauth.register(
+#     name='facebook',
+#     client_id='1052296011819502',
+#     client_secret='fcb79bc8754e158ea251428f90b96248',
+#     access_token_url='https://www.facebook.com/v6.0/dialog/oauth',
+#     access_token_params=None,
+#     authorize_url='https://www.facebook.com/v6.0/dialog/oauth',
+#     authorize_params=None,
+#     client_kwargs={'scope': 'user:email'},
+# )
+#
+# oauth.register(
+#     name='github',
+#     client_id='c5e62cb737afdf029e7b',
+#     client_secret='6d6ffbf355a3ecb8c55b5b56d873575ba667fc68',
+#     access_token_url='https://github.com/login/oauth/access_token',
+#     access_token_params=None,
+#     authorize_url='https://github.com/login/oauth/authorize',
+#     authorize_params=None,
+#     api_base_url='https://api.github.com/',
+#     client_kwargs={'scope': 'user:email'},
+# )
+#

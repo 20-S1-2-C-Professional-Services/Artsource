@@ -1,3 +1,5 @@
+Create super user:
+python manage.py createsuperuser
 To modify the db, you need change code in model files, then use below command lines:
 python manage.py makemigrations 
 python manage.py migrate 
