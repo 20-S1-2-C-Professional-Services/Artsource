@@ -15,9 +15,8 @@ from PIL import Image
 from .models import EmailVerifyRecord
 from artworkpage.models import Artwork
 from artworkpage.Image_tools import crop
+import base64
 
-
-# from PIL import Image
 
 
 class ActiveUserView(View):
@@ -373,27 +372,31 @@ def register_middle(request):
 
 def upload_artwork(request):
     if request.method == 'POST':
-        upload_form = UploadForm(request.POST, request.FILES)
-        if upload_form.is_valid():
-            artwork = Artwork()
-            current_user_name = request.session.get('user_name')
-            user = models.User.objects.get(username=current_user_name)
-            artwork.name = upload_form.cleaned_data['name']
-            image = upload_form.cleaned_data['image']
-            artwork.image = image
+        name = request.POST.get('name')
+        if Artwork.objects.filter(name=name):
+            message = "This name already exist!"
+            return render(request, "user/upload_artwork.html", {'message': message})
+        artwork = Artwork()
+        current_user_name = request.session.get('user_name')
+        user = models.User.objects.get(username=current_user_name)
+        artwork.name = name
+        image_bytes = request.FILES.get('image').read()
+        image_io = io.BytesIO()
+        image_io.write(image_bytes)
+        image_file = InMemoryUploadedFile(image_io, None, '{}.jpg'.format(name), 'image/jpeg',
+                                          image_io.getbuffer().nbytes, None)
 
-            thumb = crop(Image.open(upload_form.cleaned_data['image']))
-            thumb_io = io.BytesIO()
-            thumb.save(thumb_io, format='JPEG')
-            thumb_file = InMemoryUploadedFile(thumb_io, None, '{}.jpg'.format(artwork.name), 'image/jpeg',
-                                              thumb_io.getbuffer().nbytes, None)
-            artwork.thumbnail = thumb_file
+        artwork.image = image_file
 
-            artwork.user = user
-            artwork.save()
-            return redirect('/user/profile/')
-        print("didnt store")
-        upload_form = UploadForm()
-        return render(request, "user/upload_artwork.html", {'upload_form': upload_form})
-    upload_form = UploadForm()
-    return render(request, "user/upload_artwork.html", {'upload_form': upload_form})
+        thumbnail = request.POST.get('thumbnail')
+        code = thumbnail.replace('data:image/jpeg;base64,', '')
+        thumb_data = base64.b64decode(code)
+        thumb_io = io.BytesIO()
+        thumb_io.write(thumb_data)
+        thumb_file = InMemoryUploadedFile(thumb_io, None, '{}.jpg'.format(name+"_thumbnail"), 'image/jpeg',
+                                          thumb_io.getbuffer().nbytes, None)
+        artwork.thumbnail = thumb_file
+        artwork.user = user
+        artwork.save()
+        return redirect('/user/profile/')
+    return render(request, "user/upload_artwork.html")

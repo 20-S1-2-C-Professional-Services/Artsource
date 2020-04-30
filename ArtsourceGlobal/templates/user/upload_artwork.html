@@ -12,12 +12,15 @@
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 {% endblock %}
-
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/upload_artwork.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <div class="container" >
     <div id="block-position">
-        <form  class="form-login" action="/user/upload_artwork/"  method="post" enctype="multipart/form-data">
+        <form  class="form-login" action="/user/upload_artwork/" method="post" enctype="multipart/form-data">
 
             {% if message %}
                 <div class="alert alert-warning">{{ message }}</div>
@@ -26,18 +29,18 @@
             {% csrf_token %}
             <h2 class="text-center">Welcome to upload!</h2>
 
-                <div class="form-group">
-                    {{ upload_form.name.label_tag }}
-                    {{ upload_form.name }}
+                <div class="form-group">Input the name of this artwork
+                    <input type="text" name="name" id="name" maxlength="128">
                 </div>
-
-                <div class="form-group">
-                    {{ upload_form.image.label_tag }}
-                    {{ upload_form.image }}
+                <div class="form-group">Upload the image
+                    <input type="file" accept="image/*" name="image" id="image" onchange="verificationPicFile(this)">
+                </div>
+                <div class="form-group" style="display: none">
+                    <input type="text" name="thumbnail" id="thumbnail" >
                 </div>
 
             <button type="reset" class="btn btn-default pull-left">reset</button>
-            <button type="submit" class="btn btn-default pull-right">submit</button>
+            <button type="submit" id="submit_button" class="btn btn-default pull-right">submit</button>
         </form>
     </div>
 
