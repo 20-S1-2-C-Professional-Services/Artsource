@@ -16,6 +16,8 @@ pipreqs ./ --encoding=utf-8
 
 Install the required modules, if network is too slow, try to use other source:
 pip3 install -r requirements.txt
+if you cannot download the modules in China, you can try below command:
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
 you can run server by:
 python manage.py runserver
