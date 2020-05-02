@@ -292,8 +292,9 @@ def profile(request):
     if user.artwork_user is not None:
         artworks = user.artwork_user.all()
         for artwork in artworks:
+            print(artwork)
             images.append(artwork.image.url)
-
+        print(images)
     return render(request, 'user/profile.html', {"images": images})
 
 
