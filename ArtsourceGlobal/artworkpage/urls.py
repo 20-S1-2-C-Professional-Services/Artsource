@@ -9,6 +9,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('search/', views.search),
     path('booking/<int:pk>/', views.booking_detail, name='booking_detail'),
     re_path('booking/(?P<pk>\d+)', views.bookArt, name='booking'),
     # path('booking/review', views.finaliseBooking, name='review'),

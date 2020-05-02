@@ -11,12 +11,11 @@ from .email_send import send_code_email
 from .form import UserForm, RegisterForm, ProfileForm, ResetForm, RetrieveForm, UploadForm
 import hashlib
 from PIL import Image
-
+from artworkpage.models import TagsNames
 from .models import EmailVerifyRecord
 from artworkpage.models import Artwork
 from artworkpage.Image_tools import crop
 import base64
-
 
 
 class ActiveUserView(View):
@@ -370,7 +369,15 @@ def register_middle(request):
     return render(request, "user/register_middle.html")
 
 
+# this tag list should be empty, I set values for test
+tags = ['dog', 'peppers', 'mandm', 'mountain', 'civilization']
+
+
 def upload_artwork(request):
+    global tags
+    if not len(tags):
+        tags = TagsNames.objects.values_list("tag_names")
+
     if request.method == 'POST':
         name = request.POST.get('name')
         if Artwork.objects.filter(name=name):
@@ -393,10 +400,28 @@ def upload_artwork(request):
         thumb_data = base64.b64decode(code)
         thumb_io = io.BytesIO()
         thumb_io.write(thumb_data)
-        thumb_file = InMemoryUploadedFile(thumb_io, None, '{}.jpg'.format(name+"_thumbnail"), 'image/jpeg',
+        thumb_file = InMemoryUploadedFile(thumb_io, None, '{}.jpg'.format(name + "_thumbnail"), 'image/jpeg',
                                           thumb_io.getbuffer().nbytes, None)
         artwork.thumbnail = thumb_file
         artwork.user = user
+
+        # the code to get and store the tags
+
+        # TODO: finish the tag functions here
+        tags_input = request.POST.get('tags')
+        # so this should be the line to store tags
+        # artwork.tags=tags_input
+
+        tags_input = tags_input.split(',')
+        # update the tags
+        for i in tags_input:
+            if i not in tags:
+                tags.append(i)
+                new_tag = TagsNames()
+                new_tag.tag_names=i
+                new_tag.save()
+
         artwork.save()
         return redirect('/user/profile/')
-    return render(request, "user/upload_artwork.html")
+    print(tags)
+    return render(request, "user/upload_artwork.html", {'tags': tags})

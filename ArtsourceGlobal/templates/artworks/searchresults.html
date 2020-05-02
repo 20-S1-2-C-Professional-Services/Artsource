@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<title>Search results</title>
+</head>
+<body>
+
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Search results{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/image.css' %}">
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/imglist.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="imgLayoutPanel">
+    <li class="imgButtionList">
+        <button id="FourButton" title="Four images each row" onclick="FourImagesOneLine()">
+            4/row
+        </button>
+        <button id="ThreeButton" title="Three images each row" onclick="ThreeImagesOneLine()">
+            3/row
+        </button>
+        <button id="TwoButton" title="Two images each row" onclick="TwoImagesOneLine()">
+            2/row
+        </button>
+    </li>
+</div>
+<div class="imagePage">
+{% if images %}
+    <ul class="imgList" >
+        {% for item in images %}
+    <li class="imgItem" id="image4">
+        <img class="image"   src="{{ item }}" ></img>
+    </li>
+    {% endfor %}
+    </ul>
+
+
+{% endif %}
+</div>
+{% endblock %}
+</body>
+</html>

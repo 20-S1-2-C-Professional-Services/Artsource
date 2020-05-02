@@ -24,3 +24,9 @@ class Artwork(models.Model):
         verbose_name = 'artwork'
         verbose_name_plural = 'artworks'
 
+
+class TagsNames(models.Model):
+    """just used for store the name different tags"""
+
+    tag_names = models.CharField(max_length=128, unique=True)
+    objects = models.Manager()
