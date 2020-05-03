@@ -412,7 +412,7 @@ def upload_artwork(request):
         tags_input = request.POST.get('tags')
 
         t = tags_input
-        s_filter = "~!@#$%^&*()_+-*/<>,.[]\/"
+        s_filter = "~!@#$%^&*()_+-*/<>[]\/"
         for i in s_filter:
             if i in t:
                 t = t.replace(i,'')

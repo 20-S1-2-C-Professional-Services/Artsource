@@ -1,7 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect,reverse
+
+from booking.forms import BookArtForm
 from homepage.models import Artwork, Booking
 from booking.models import Reservation
 from artworkpage.models import Artwork
+import datetime
 
 # Create your views here.
 def index(request):
@@ -11,6 +14,7 @@ def index(request):
 
 # TODO: add the tag search functions here
 def search(request):
+    images = []
     if request.method == 'POST':
         name = request.POST.get('name')
         if Artwork.objects.filter(name=name):
@@ -23,9 +27,28 @@ def search(request):
 
         # TODO: finish the tag functions here
         tags_input = request.POST.get('tags') #this is the input string
+
+        t = tags_input
+        s_filter = "~!@#$%^&*()_+-*/<>[]\/"
+        for i in s_filter:
+            if i in t:
+                t = t.replace(i, '')
+        t = t.replace(',', ' ')
+        t = t.replace(';', ' ')
+        t = t.replace('.', ' ')
+        t = t.split()
+        from artworkpage import models
+        res = models.Artwork.objects.all()
+
+        for i in res:
+            for k in t:
+                if i.tags_obtained == k:
+                    images.append(i.image)
+                    #   print(type(i.image))
+                    continue
+
         # so this should be the line to search artworks
         # store the searched results into this list, online store the url
-        images = []
     return render(request, "artworks/searchresults.html", {'images': images})
 
 
@@ -53,7 +76,7 @@ def bookArt(request, pk):
                            'total_price_booking': total_price_booking, 'string_date': string_date})
 
 
-def ReviewBooking(request, checkin, checkout, artid, delta, total_price):
+def ReviewBooking(request, checkin, checkout, artid, delta, total_price,total_price_booking,string_date):
     return render(request, 'finaliseBooking', {'checkin': checkin, 'checkout': checkout, 'artid': artid, 'delta': delta,
                                                'total_price_booking': total_price_booking, 'string_date': string_date})
 
