@@ -11,6 +11,9 @@ class Artwork(models.Model):
     thumbnail = models.ImageField(upload_to='Thumbnail')
     user = models.ForeignKey(User, related_name='artwork_user', on_delete=models.CASCADE)
     price = models.IntegerField(default=0)
+    tags_obtained = models.CharField(max_length=128,default='')
+    # create a filed to store all tags obtained by an artwork (connect them by space)
+    # "tag_A tag_B tag_C tag_D"
     objects = models.Manager()
 
     # url_height = models.PositiveIntegerField(default=75)
