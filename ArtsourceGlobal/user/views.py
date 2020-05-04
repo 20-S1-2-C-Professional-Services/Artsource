@@ -412,10 +412,23 @@ def upload_artwork(request):
 
         # TODO: finish the tag functions here
         tags_input = request.POST.get('tags')
+
+        t = tags_input
+        s_filter = "~!@#$%^&*()_+-*/<>[]\/"
+        for i in s_filter:
+            if i in t:
+                t = t.replace(i,'')
+        t = t.replace(',', ' ')
+        t = t.replace(';', ' ')
+        t = t.replace('.', ' ')
+        t = ' '.join(t.split())
+        artwork.tags_obtained = t
+
+
         # so this should be the line to store tags
         # artwork.tags=tags_input
 
-        tags_input = tags_input.split(',')
+        tags_input = t.split()
         # update the tags
         for i in tags_input:
             if i not in tags:
