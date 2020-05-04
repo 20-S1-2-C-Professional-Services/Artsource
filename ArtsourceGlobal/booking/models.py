@@ -15,7 +15,8 @@ class Reservation(models.Model):
     renter = models.ForeignKey(User, related_name='renter', on_delete=models.CASCADE)
     CheckIn = models.DateField()
     CheckOut = models.DateField()
-    totalPrice = models.IntegerField(default=0)
+    duration = models.FloatField(default=0.0)
+    totalPrice = models.FloatField(default=0.0)
     objects = models.Manager()
 
     def get_id(self):

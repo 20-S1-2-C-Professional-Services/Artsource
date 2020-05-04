@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ContactForm
 from django.contrib import messages
 from django.http import HttpResponse
-from .models import Artwork, Booking
+from artworkpage.models import Artwork
 from artworkpage.models import TagsNames
 
 

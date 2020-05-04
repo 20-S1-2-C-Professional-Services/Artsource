@@ -1,4 +1,5 @@
 
+
 function verificationPicFile(file) {
     var fileSize = 0;
     var fileMaxSize = 2048;//2M
@@ -22,6 +23,13 @@ function verificationPicFile(file) {
     }
 }
 
+var x;
+var y;
+var width;
+var height;
+var image = new Image();
+var originalWidth;
+var originalHeight;
 function verificationPicFile3(file) {
     var filePath = file.value;
     if(filePath){
@@ -31,20 +39,65 @@ function verificationPicFile3(file) {
         reader.onload = function (e) {
             var data = e.target.result;
             //load the data
-            var image = new Image();
+            image.src= data;
+            var $preview = $('#demoImg');
+            // Get the Cropper.js instance after initialized
+            // var cropper = $preview.data('cropper');
             image.onload=function(){
-                document.getElementById("image").appendChild(image);
-                canvas_thumbnail = AutoSize(image,600,400);
+                originalHeight=image.height;
+                originalWidth=image.width;
+                var canvas_thumbnail = AutoSize(image,400,300);
                 //save as jpeg
                 $('#thumbnail').val(canvas_thumbnail.toDataURL("image/jpeg"));
+                document.getElementById('cropbtn').style.display="";
+                $preview.cropper('destroy');
+                $preview.attr('src', image.src);
+                $preview.attr('height',image.height);
+                $preview.attr('width',image.width);
+                 $preview.cropper({
+                  aspectRatio: 4/ 3,
+                  crop: function(event) {
+                    x=event.detail.x;
+                    y=event.detail.y;
+                    width=event.detail.width;
+                    height=event.detail.height;
+                  }
+                });
             };
-            image.src= data;
+
         };
         reader.readAsDataURL(filePic);
+
     }else{
         return false;
     }
+}
 
+
+function drawImage(){
+    var canvas = document.createElement("canvas");
+    canvas.width=originalWidth;
+    canvas.height=originalHeight;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(image, 0,0);
+    var imgData=ctx.getImageData(x,y,width,height);
+    // var currentWidth;
+    // currentWidth= width-x;
+    // var currentHeight;
+    // currentHeight= height-y;
+    canvas.width=width;
+    canvas.height=height;
+    ctx.putImageData(imgData,0,0);
+    var result =new Image();
+    result.src= canvas.toDataURL("image/jpeg");
+    result.onload=function () {
+        var canvas2 = document.createElement("canvas");
+        canvas2.width=400;
+        canvas2.height=300;
+        canvas2.getContext("2d").drawImage(result,0,0,width,height,0,0,400,300);
+        $('#thumbnail').val(canvas2.toDataURL("image/jpeg"));
+        $('#croppedImage').attr('src',canvas2.toDataURL("image/jpeg"));
+    }
 }
 
 function AutoSize(Img, maxWidth, maxHeight) {

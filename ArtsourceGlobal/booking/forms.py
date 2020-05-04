@@ -7,10 +7,9 @@ from django.contrib.auth.models import User
 class BookArtForm(forms.ModelForm):
     class Meta:
         model = Reservation
-        field = ('CheckIn', 'CheckOut',)
-        exclude = ('booking_owner', 'art', 'artist', 'totalPrice',)
+        fields = ('CheckIn', 'CheckOut')
+        exclude = None
         widgets = {
-            'CheckIn': forms.DateTimeInput(attrs={'class': 'datetime-input'}),
-            'CheckOut': forms.DateTimeInput(attrs={'class': 'datetime-input'}),
+            'CheckIn': forms.DateTimeInput(attrs={'class': 'datetime-input', 'type': 'date'}),
+            'CheckOut': forms.DateTimeInput(attrs={'class': 'datetime-input', 'type': 'date'}),
         }
-

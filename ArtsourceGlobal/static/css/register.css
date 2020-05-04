@@ -1,7 +1,14 @@
 .form-register {
   max-width: 400px;
-  padding: 15px;
+  padding: 6px;
   margin: 0 auto;
+}
+
+.form-button{
+  max-width: 400px;
+  padding: 15px;
+  margin: 0 0 1% 1%;
+  float: left;
 }
 
 .form-entry {

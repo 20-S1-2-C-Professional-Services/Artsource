@@ -36,9 +36,15 @@
                  </a>
              </li>
              <li class="nav-item">
-                 <a class="nav-link" href="#bookedart" role="tab" data-toggle="tab">
+                 <a class="nav-link" href="/user/booked_artwork" role="tab" data-toggle="tab">
                    <i class="material-icons">favorite</i>
                      Art booked
+                 </a>
+             </li>
+            <li class="nav-item">
+                 <a class="nav-link" href="/user/lent_artwork" role="tab" data-toggle="tab">
+                   <i class="material-icons">favorite</i>
+                     Art lent out
                  </a>
              </li>
              <li class="nav-item">
@@ -67,13 +73,28 @@
 <div class="imagePage">
 {% if images %}
     <ul class="imgList" >
-        {% for item in images %}
-    <li class="imgItem" id="image4">
-        <img class="image"   src="{{ item }}" ></img>
-    </li>
-    {% endfor %}
-    </ul>
+         {% for item in images %}
 
+    <li class="imgItem" id="image4">
+        {{ item.0 }}
+        <img class="image"   src="{{ item.1 }}" >
+    <div style="width:100%;text-align:center; height: 100px" >
+        <form  class="form-register" action="/user/edit_artwork/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" style="display: none" value="{{item.0}}" name="name">
+        <button type="submit" class="btn btn-white" style="float: left; width: 32%; margin-left: 5%; margin-right: 16%">Edit</button>
+        </form>
+        <form  class="form-register" action="/user/delete_artwork/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" style="display: none" value="{{item.0}}" name="name">
+            <button type="submit" class="btn btn-warning" style="width:42%; float: left">Delete</button>
+        </form>
+    </div>
+    </li>
+
+   {% endfor %}
+
+    </ul>
 
 {% endif %}
 </div>

@@ -3,17 +3,18 @@ from django import forms
 from django.shortcuts import render
 from django.urls import reverse
 from django.core.signing import Signer
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Q
 from user.models import User
-#from Authorize.models import UserRole
-#from ManageHotels.models import Photo
+# from Authorize.models import UserRole
+# from ManageHotels.models import Photo
 from .models import Reservation
 from django.shortcuts import render, redirect
-from homepage.models import Artwork
+from user.models import User
+from artworkpage.models import Artwork
 from .forms import BookArtForm
 from datetime import datetime
-
+import json
 from django.views import View
 from django.template.loader import get_template
 
@@ -21,30 +22,112 @@ from django.template.loader import get_template
 ## Generates a PDF using the render help function and outputs it as invoice.html
 
 
-
-
 ## Works out how long the user is staying in a hotel for also working out the total cost.
 def bookArt(request, pk):
-    artid = Artwork.objects.get(id=pk)
+    art_id = int(float(pk))
+    artwork = Artwork.objects.get(id=art_id)
+
+    if request.session.get('user_name') is None:
+        message = "Please login first!"
+        return redirect('/user/index/', {'message': message})
+
+    if artwork.user.username == request.session.get('user_name'):
+        message = "This is your artwork, you dont need book it!"
+        return redirect('/user/index/', {'message': message})
+
     if request.method == 'GET':
         form = BookArtForm()
-        args = {'artid': artid, 'form':form,}
-        return render(request, 'booking/bookart.html',args)
+        args = {'artid': artwork, 'form': form, }
+        return render(request, 'booking/bookart.html', args)
     else:
-        form= BookArtForm(request.POST)
+        form = BookArtForm(request.POST)
         if form.is_valid():
             checkin = form.cleaned_data['CheckIn']
             checkout = form.cleaned_data['CheckOut']
-            delta = calc_delta(checkin,checkout)
-            total_price_booking = calc_price(artid.price_artwork_per_day, delta.days)
-            string_date = convert_to_str(delta)
-            return render(request, 'booking/bookart.html', {'checkin':checkin,'checkout':checkout, 'artid':artid, 'delta':delta, 'total_price_booking':total_price_booking,'string_date':string_date})
+            delta = calc_delta(checkin, checkout)
+            total_price_booking = calc_price(artwork.price, delta.days)
+            return render(request, 'booking/confirmbooking.html',
+                          {'checkin': checkin, 'checkout': checkout, 'name': artwork.name,
+                           'single_price': artwork.price, 'duration': delta,
+                           'total_price': total_price_booking})
 
-def ReviewBooking(request,checkin,checkout, artid, delta, total_price):
-      return render(request, 'finaliseBooking', {'checkin':checkin,'checkout':checkout, 'artid':artid, 'delta':delta, 'total_price_booking':total_price_booking,'string_date':string_date})
+
+def finish_booking(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        checkin = request.POST.get('checkin')
+        checkout = request.POST.get('checkout')
+        total_price = request.POST.get('total_price')
+        duration = request.POST.get('duration')
+        artwork = Artwork.objects.get(name=name)
+        reservation = Reservation()
+        reservation.artwork = artwork
+        reservation.owner = artwork.user
+        reservation.renter = User.objects.get(username=request.session.get('user_name'))
+        reservation.CheckIn = checkin
+        reservation.CheckOut = checkout
+        reservation.duration = float(duration.split(' ')[0])
+        reservation.totalPrice = total_price
+        reservation.save()
+        message = 'successfully booked'
+        return render(request, 'booking/review.html', {'message': message, 'checkin': checkin,
+                                                       'checkout': checkout, 'name': name,
+                                                       'single_price': artwork.price, 'duration': duration,
+                                                       'total_price': total_price})
+
+    message = 'No order find'
+    return render(request, 'booking/confirmbooking.html',
+                  {'message': message})
 
 
-#'checkin':checkin,'checkout':checkout
+# seems nothing need to do for this stage, this function also work for finish review
+# this function will need split into finish_review and cancel_booking if you want to do
+# sth different with these two behaviours
+def cancel_booking(request):
+    return redirect('/user/index/')
+
+
+# 'checkin':checkin,'checkout':checkout
+def calc_delta(checkin, checkout):
+    date_format = "%Y-%m-%d"
+    date1 = datetime.strptime(str(checkin), date_format)
+    date2 = datetime.strptime(str(checkout), date_format)
+    delta = date2 - date1
+    return delta
+
+
+def calc_price(price, delta):
+    total_price = price * delta
+    return total_price
+
+
+def convert_to_str(delta):
+    return str(delta)
+
+
+# Stores the confirmed booking  into the database
+def storeBooking(request, artid, checkin, checkout, totalcost):
+    if request.method == 'POST':
+        user = request.user
+        art = Artwork.objects.get(artid)
+        cost = totalcost
+        newReservation = Reservation()
+        newReservation.booking_owner = user
+        newReservation.art = art
+        newReservation.CheckIn = checkin
+        newReservation.CheckOut = checkout
+        newReservation.totalPrice = cost
+        newReservation.save()
+        # Deletes the session variables.
+        del request.session['checkin']
+        del request.session['checkout']
+        link = reverse('homepage:view_profile')
+        return HttpResponseRedirect(link)
+
+    else:
+        url = reverse('homepage:view_profile')
+        return url
+
 
 def finaliseBooking(request, artid, checkin, checkout, totalcost):
     if request.method == 'POST':
@@ -59,46 +142,4 @@ def finaliseBooking(request, artid, checkin, checkout, totalcost):
         link = reverse('bookArt')
         return redirect(link)
         form = BookArtForm()
-    return render(request, 'booking/review.html',{'form':form})
-
-
-
-
-def calc_delta (checkin, checkout):
-    date_format = "%Y-%m-%d"
-    date1= datetime.strptime(str(checkin), date_format)
-    date2=datetime.strptime(str(checkout), date_format)
-    delta = date2 - date1
-    return delta
-
-
-def calc_price(price, delta):
-    total_price = price*delta
-    return total_price
-
-
-def convert_to_str(delta):
-    return str(delta)
-# Stores the confirmed booking  into the database
-def storeBooking(request,artid,checkin,checkout,totalcost):
-
-    if request.method == 'POST':
-        user = request.user
-        art=Artwork.objects.get(artid)
-        cost = totalcost
-        newReservation = Reservation()
-        newReservation.booking_owner = user
-        newReservation.art = art
-        newReservation.CheckIn = checkin
-        newReservation.CheckOut = checkout
-        newReservation.totalPrice = cost
-        newReservation.save()
-        #Deletes the session variables.
-        del request.session['checkin']
-        del request.session['checkout']
-        link = reverse('homepage:view_profile')
-        return HttpResponseRedirect(link)
-
-    else:
-        url = reverse('homepage:view_profile')
-        return url
+    return render(request, 'booking/review.html', {'form': form})

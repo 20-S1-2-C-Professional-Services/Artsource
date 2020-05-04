@@ -14,6 +14,7 @@ from PIL import Image
 from artworkpage.models import TagsNames
 from .models import EmailVerifyRecord
 from artworkpage.models import Artwork
+from booking.models import Reservation
 from artworkpage.Image_tools import crop
 import base64
 
@@ -290,11 +291,11 @@ def profile(request):
     user = models.User.objects.get(username=current_user_name)
     images = []
     if user.artwork_user is not None:
-        artworks = user.artwork_user.all()
+        artworks = user.artwork_user.values_list("name", "image")
         for artwork in artworks:
-            print(artwork)
-            images.append(artwork.image.url)
-        print(images)
+            name = artwork[0]
+            url = '/media/' + artwork[1]
+            images.append([name, url])
     return render(request, 'user/profile.html', {"images": images})
 
 
@@ -383,7 +384,7 @@ def upload_artwork(request):
         name = request.POST.get('name')
         if Artwork.objects.filter(name=name):
             message = "This name already exist!"
-            return render(request, "user/upload_artwork.html", {'message': message})
+            return render(request, "user/upload_artwork.html", {'message': message, 'tags': tags})
         artwork = Artwork()
         current_user_name = request.session.get('user_name')
         user = models.User.objects.get(username=current_user_name)
@@ -405,7 +406,8 @@ def upload_artwork(request):
                                           thumb_io.getbuffer().nbytes, None)
         artwork.thumbnail = thumb_file
         artwork.user = user
-
+        # save the price
+        artwork.price = request.POST.get('price')
         # the code to get and store the tags
 
         # TODO: finish the tag functions here
@@ -419,10 +421,57 @@ def upload_artwork(request):
             if i not in tags:
                 tags.append(i)
                 new_tag = TagsNames()
-                new_tag.tag_names=i
+                new_tag.tag_names = i
                 new_tag.save()
 
         artwork.save()
         return redirect('/user/profile/')
-    print(tags)
     return render(request, "user/upload_artwork.html", {'tags': tags})
+
+
+def edit_artwork(request):
+    global tags
+    if not len(tags):
+        tags = TagsNames.objects.values_list("tag_names")
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        artwork = Artwork.objects.filter(name=name).first()
+        if artwork:
+            name = artwork.name
+            image = artwork.image.url
+            tag_string = artwork.tags
+            price = artwork.price
+    return
+
+
+def delete_artwork(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        artwork = Artwork.objects.filter(name=name).first()
+        if artwork:
+            artwork.delete()
+    return redirect('/user/profile/')
+
+
+def booked_artwork(request):
+    user_name = request.session.get('user_name')
+    user = models.User.objects.get(username=user_name)
+    images = []
+    if user.renter is not None:
+        booked_records = user.renter.all()
+        for record in booked_records:
+            if record.artwork is not None:
+                images.append(record.artwork.image.url)
+    return render(request, 'user/profile.html', {"images": images})
+
+
+def lent_artwork(request):
+    user_name = request.session.get('user_name')
+    user = models.User.objects.get(username=user_name)
+    images = []
+    if user.owner is not None:
+        booked_records = user.owner.all()
+        for record in booked_records:
+            if record.artwork is not None:
+                images.append(record.artwork.image.url)
+    return render(request, 'user/profile.html', {"images": images})
