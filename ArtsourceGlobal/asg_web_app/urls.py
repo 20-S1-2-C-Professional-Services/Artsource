@@ -36,6 +36,7 @@ urlpatterns = [
     path('', include(('booking.urls', 'booking'), namespace='booking')),
     # path('homeafterlogin/', views.index, name='homeAfterLogin'),
     path('', include('homepage.urls')),
+    path('homepage/', include('homepage.urls')),
     path('booking/', include('booking.urls')),
     path('', include('booking.urls')),
     path('user/', include('user.urls')),

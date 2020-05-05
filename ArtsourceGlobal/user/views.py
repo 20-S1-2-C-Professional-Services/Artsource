@@ -296,7 +296,7 @@ def profile(request):
             name = artwork[0]
             url = '/media/' + artwork[1]
             images.append([name, url])
-    return render(request, 'user/profile.html', {"images": images})
+    return render(request, 'user/profile.html', {"profile": True, "images": images})
 
 
 def edit_profile(request):
@@ -412,31 +412,25 @@ def upload_artwork(request):
 
         # TODO: finish the tag functions here
         tags_input = request.POST.get('tags')
-
-        t = tags_input
-        s_filter = "~!@#$%^&*()_+-*/<>[]\/"
-        for i in s_filter:
-            if i in t:
-                t = t.replace(i,'')
-        t = t.replace(',', ' ')
-        t = t.replace(';', ' ')
-        t = t.replace('.', ' ')
-        t = ' '.join(t.split())
-        artwork.tags_obtained = t
-
+        artwork.tags = tags_input
+        # t = tags_input
+        # s_filter = "~!@#$%^&*()_+-*/<>[]\/"
+        # for i in s_filter:
+        #     if i in t:
+        #         t = t.replace(i,'')
+        # t = t.replace(',', ' ')
+        # t = t.replace(';', ' ')
+        # t = t.replace('.', ' ')
+        # t = ' '.join(t.split())
 
         # so this should be the line to store tags
-        # artwork.tags=tags_input
-
-        tags_input = t.split()
         # update the tags
-        for i in tags_input:
+        for i in tags_input.split(" "):
             if i not in tags:
                 tags.append(i)
                 new_tag = TagsNames()
                 new_tag.tag_names = i
                 new_tag.save()
-
         artwork.save()
         return redirect('/user/profile/')
     return render(request, "user/upload_artwork.html", {'tags': tags})
@@ -473,9 +467,9 @@ def booked_artwork(request):
     if user.renter is not None:
         booked_records = user.renter.all()
         for record in booked_records:
-            if record.artwork is not None:
-                images.append(record.artwork.image.url)
-    return render(request, 'user/profile.html', {"images": images})
+            if record.artwork_booked is not None:
+                images.append([record.artwork_booked.name, record.artwork_booked.image.url])
+    return render(request, 'user/profile.html', {"booked": True, "images": images})
 
 
 def lent_artwork(request):
@@ -485,6 +479,9 @@ def lent_artwork(request):
     if user.owner is not None:
         booked_records = user.owner.all()
         for record in booked_records:
-            if record.artwork is not None:
-                images.append(record.artwork.image.url)
-    return render(request, 'user/profile.html', {"images": images})
+            if record.artwork_booked is not None:
+                if record.artwork_booked.booked:
+                    images.append([record.artwork_booked.name, record.artwork_booked.image.url, True])
+                else:
+                    images.append([record.artwork_booked.name, record.artwork_booked.image.url])
+    return render(request, 'user/profile.html', {"lent": True,  "images": images})

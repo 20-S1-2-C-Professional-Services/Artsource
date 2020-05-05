@@ -12,7 +12,7 @@ class Artwork(models.Model):
     user = models.ForeignKey(User, related_name='artwork_user', on_delete=models.CASCADE)
     price = models.FloatField(default=0)
     booked = models.BooleanField(default=False)
-    tags = models.CharField(max_length=256, default='')
+    tags = models.CharField(max_length=128, default='')
     objects = models.Manager()
 
     # url_height = models.PositiveIntegerField(default=75)

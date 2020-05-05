@@ -16,4 +16,7 @@ urlpatterns = [
     path('finish_booking/', views.finish_booking),
     path('cancel_booking/', views.cancel_booking),
     path('finish_review/', views.cancel_booking),
+    path('review/', views.review),
+    path('accept/', views.accept),
+    path('cancel/', views.cancel),
 ]

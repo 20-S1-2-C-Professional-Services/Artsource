@@ -37,8 +37,8 @@
 {% if images %}
     <ul class="imgList" >
         {% for item in images %}
-    <li class="imgItem" id="image4">
-        <img class="image"   src="{{ item }}" ></img>
+    <li class="imgItem" id="image4">{{item.0}}
+        <img class="image"   src="{{ item.1 }}" ></img>
     </li>
     {% endfor %}
     </ul>

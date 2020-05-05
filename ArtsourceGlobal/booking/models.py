@@ -11,7 +11,7 @@ from artworkpage.models import Artwork
 # Create a Reservation Model which stores booking details
 class Reservation(models.Model):
     owner = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE)
-    artwork = models.ForeignKey(Artwork, related_name='artwork', on_delete=models.CASCADE)
+    artwork_booked = models.ForeignKey(Artwork, related_name='artwork_booked', on_delete=models.CASCADE)
     renter = models.ForeignKey(User, related_name='renter', on_delete=models.CASCADE)
     CheckIn = models.DateField()
     CheckOut = models.DateField()

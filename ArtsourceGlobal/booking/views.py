@@ -14,6 +14,7 @@ from user.models import User
 from artworkpage.models import Artwork
 from .forms import BookArtForm
 from datetime import datetime
+from .notifyemail import send_notify_email
 import json
 from django.views import View
 from django.template.loader import get_template
@@ -29,15 +30,15 @@ def bookArt(request, pk):
 
     if request.session.get('user_name') is None:
         message = "Please login first!"
-        return redirect('/user/index/', {'message': message})
+        return render(request, 'user/login.html', locals())
 
     if artwork.user.username == request.session.get('user_name'):
-        message = "This is your artwork, you dont need book it!"
-        return redirect('/user/index/', {'message': message})
+        message = "This is your artwork, you dont need to book it!"
+        return render(request, 'user/index.html', {'message': message})
 
     if request.method == 'GET':
         form = BookArtForm()
-        args = {'artid': artwork, 'form': form, }
+        args = {'artid': artwork, 'form': form}
         return render(request, 'booking/bookart.html', args)
     else:
         form = BookArtForm(request.POST)
@@ -61,7 +62,7 @@ def finish_booking(request):
         duration = request.POST.get('duration')
         artwork = Artwork.objects.get(name=name)
         reservation = Reservation()
-        reservation.artwork = artwork
+        reservation.artwork_booked = artwork
         reservation.owner = artwork.user
         reservation.renter = User.objects.get(username=request.session.get('user_name'))
         reservation.CheckIn = checkin
@@ -70,6 +71,7 @@ def finish_booking(request):
         reservation.totalPrice = total_price
         reservation.save()
         message = 'successfully booked'
+        send_notify_email(artwork.user.email, request.session.get('user_name'), name, 'book')
         return render(request, 'booking/review.html', {'message': message, 'checkin': checkin,
                                                        'checkout': checkout, 'name': name,
                                                        'single_price': artwork.price, 'duration': duration,
@@ -78,6 +80,56 @@ def finish_booking(request):
     message = 'No order find'
     return render(request, 'booking/confirmbooking.html',
                   {'message': message})
+
+
+def review(request):
+    if request.method == 'POST':
+        message = 'This is the booking details'
+        artwork_name = request.POST.get('name')
+        artwork = Artwork.objects.get(name=artwork_name)
+        if artwork.artwork_booked is not None:
+            booking_record = artwork.artwork_booked.first()
+            checkin = booking_record.CheckIn
+            checkout = booking_record.CheckOut
+            name = artwork_name
+            duration = booking_record.duration
+            total_price = booking_record.totalPrice
+            return render(request, 'booking/review.html', {'message': message, 'checkin': checkin,
+                                                           'checkout': checkout, 'name': name,
+                                                           'single_price': artwork.price, 'duration': duration,
+                                                           'total_price': total_price})
+    message = 'No order find, redirect to profile'
+    return redirect('/user/profile/', {'message': message})
+
+
+def accept(request):
+    if request.method == 'POST':
+        message = 'The book confirmed, redirect back'
+        artwork_name = request.POST.get('name')
+        artwork = Artwork.objects.get(name=artwork_name)
+        artwork.booked = True
+        if artwork.artwork_booked is not None:
+            record = artwork.artwork_booked.first()
+            send_notify_email(record.renter.emaill, record.renter.username, artwork_name, 'accept')
+            return render(request, 'booking/review.html', {'message': message})
+    message = 'No order find'
+    return redirect('/user/lent_artwork/', {'message': message})
+
+
+def cancel(request):
+    if request.method == 'POST':
+        message = 'The book cancelled, redirect back'
+        artwork_name = request.POST.get('name')
+        artwork = Artwork.objects.get(name=artwork_name)
+        artwork.booked = True
+        if artwork.artwork_booked is not None:
+            record = Reservation.objects.get(id=artwork.artwork_booked.first().id) # get the reservation record here
+            send_notify_email(record.renter.email, record.renter.username, artwork_name, 'cancel')
+            send_notify_email(record.owner.email, record.owner.username, artwork_name, 'cancel')
+            record.delete()
+            return redirect('/user/profile/', {'message': message})
+    message = 'No order find'
+    return redirect('/user/lent_artwork/', {'message': message})
 
 
 # seems nothing need to do for this stage, this function also work for finish review
@@ -104,42 +156,42 @@ def calc_price(price, delta):
 def convert_to_str(delta):
     return str(delta)
 
-
-# Stores the confirmed booking  into the database
-def storeBooking(request, artid, checkin, checkout, totalcost):
-    if request.method == 'POST':
-        user = request.user
-        art = Artwork.objects.get(artid)
-        cost = totalcost
-        newReservation = Reservation()
-        newReservation.booking_owner = user
-        newReservation.art = art
-        newReservation.CheckIn = checkin
-        newReservation.CheckOut = checkout
-        newReservation.totalPrice = cost
-        newReservation.save()
-        # Deletes the session variables.
-        del request.session['checkin']
-        del request.session['checkout']
-        link = reverse('homepage:view_profile')
-        return HttpResponseRedirect(link)
-
-    else:
-        url = reverse('homepage:view_profile')
-        return url
-
-
-def finaliseBooking(request, artid, checkin, checkout, totalcost):
-    if request.method == 'POST':
-        form = BookArtForm(request.POST)
-        book = form.save(commit=False)
-        book.user = request.user
-        book.save()
-        art = form.cleaned_data['artid']
-        CheckIn = form.cleaned_data['checkin']
-        CheckOut = form.cleaned_data['checkout']
-        totalPrice = form.cleaned_data['totalcost']
-        link = reverse('bookArt')
-        return redirect(link)
-        form = BookArtForm()
-    return render(request, 'booking/review.html', {'form': form})
+#
+# # Stores the confirmed booking  into the database
+# def storeBooking(request, artid, checkin, checkout, totalcost):
+#     if request.method == 'POST':
+#         user = request.user
+#         art = Artwork.objects.get(artid)
+#         cost = totalcost
+#         newReservation = Reservation()
+#         newReservation.booking_owner = user
+#         newReservation.art = art
+#         newReservation.CheckIn = checkin
+#         newReservation.CheckOut = checkout
+#         newReservation.totalPrice = cost
+#         newReservation.save()
+#         # Deletes the session variables.
+#         del request.session['checkin']
+#         del request.session['checkout']
+#         link = reverse('homepage:view_profile')
+#         return HttpResponseRedirect(link)
+#
+#     else:
+#         url = reverse('homepage:view_profile')
+#         return url
+#
+#
+# def finaliseBooking(request, artid, checkin, checkout, totalcost):
+#     if request.method == 'POST':
+#         form = BookArtForm(request.POST)
+#         book = form.save(commit=False)
+#         book.user = request.user
+#         book.save()
+#         art = form.cleaned_data['artid']
+#         CheckIn = form.cleaned_data['checkin']
+#         CheckOut = form.cleaned_data['checkout']
+#         totalPrice = form.cleaned_data['totalcost']
+#         link = reverse('bookArt')
+#         return redirect(link)
+#         form = BookArtForm()
+#     return render(request, 'booking/review.html', {'form': form})

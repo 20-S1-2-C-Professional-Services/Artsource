@@ -58,6 +58,9 @@
     </div>
 </div>
 <div class="imgLayoutPanel">
+                {% if message %}
+                    <div class="alert alert-warning">{{ message }}</div>
+                {% endif %}
     <li class="imgButtionList">
         <button id="FourButton" title="Four images each row" onclick="FourImagesOneLine()">
             4/row
@@ -79,6 +82,7 @@
         {{ item.0 }}
         <img class="image"   src="{{ item.1 }}" >
     <div style="width:100%;text-align:center; height: 100px" >
+        {% if profile %}
         <form  class="form-register" action="/user/edit_artwork/" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="text" style="display: none" value="{{item.0}}" name="name">
@@ -89,6 +93,39 @@
             <input type="text" style="display: none" value="{{item.0}}" name="name">
             <button type="submit" class="btn btn-warning" style="width:42%; float: left">Delete</button>
         </form>
+        {% elif lent %}
+        {% if item.2 %}
+        <form  class="form-register" action="/booking/review/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" style="display: none" value="{{item.0}}" name="name">
+        <button type="submit" class="btn btn-white" style="float: left; width: 32%; margin-left: 5%; margin-right: 16%">Review</button>
+        </form>
+        {% else %}
+        <form  class="form-register" action="/booking/accept/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" style="display: none" value="{{item.0}}" name="name">
+        <button type="submit" class="btn btn-white" style="float: left; width: 32%; margin-left: 5%; margin-right: 16%">Confirm</button>
+        </form>
+         <form  class="form-register" action="/booking/cancel/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" style="display: none" value="{{item.0}}" name="name">
+            <button type="submit" class="btn btn-warning" style="width:42%; float: left">Decline</button>
+        </form>
+        {% endif %}
+        {% elif booked %}
+        <form  class="form-register" action="/booking/review/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" style="display: none" value="{{item.0}}" name="name">
+        <button type="submit" class="btn btn-white" style="float: left; width: 32%; margin-left: 5%; margin-right: 16%">Review</button>
+        </form>
+        <form  class="form-register" action="/booking/cancel/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" style="display: none" value="{{item.0}}" name="name">
+            <button type="submit" class="btn btn-warning" style="width:42%; float: left">Cancel</button>
+        </form>
+        {% endif %}
+
+
     </div>
     </li>
 

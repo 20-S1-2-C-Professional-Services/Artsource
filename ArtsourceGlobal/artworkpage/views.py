@@ -1,54 +1,48 @@
-from django.shortcuts import render, redirect,reverse
+from django.shortcuts import render, redirect, reverse
 
 from booking.forms import BookArtForm
 from homepage.models import Artwork, Booking
 from booking.models import Reservation
 from artworkpage.models import Artwork
 import datetime
+from django.db.models import Q
+
 
 # Create your views here.
 def index(request):
-    artworks = Artwork.objects.all()
     return render(request, 'artworkpage/index.html')
 
 
 # TODO: add the tag search functions here
 def search(request):
     images = []
+    current_username = request.session.get('user_name')
     if request.method == 'POST':
-        name = request.POST.get('name')
-        if Artwork.objects.filter(name=name):
-            message = "This name already exist!"
-            return render(request, "user/upload_artwork.html", {'message': message})
-        artwork = Artwork()
-        current_user_name = request.session.get('user_name')
-
         # the code to get and store the tags
 
         # TODO: finish the tag functions here
-        tags_input = request.POST.get('tags') #this is the input string
+        tags_input = request.POST.get('tags')  # this is the input string
 
-        t = tags_input
-        s_filter = "~!@#$%^&*()_+-*/<>[]\/"
-        for i in s_filter:
-            if i in t:
-                t = t.replace(i, '')
-        t = t.replace(',', ' ')
-        t = t.replace(';', ' ')
-        t = t.replace('.', ' ')
-        t = t.split()
-        from artworkpage import models
-        res = models.Artwork.objects.all()
+        if len(tags_input) == 0:
+            message = 'please enter the tags or words you want!'
+            return render(request, 'homepage/index.html', {'message': message})
+        # at the beginning search was implemented by extra, however, it uses different command for different db
+        # Thus us Q instead
+        q1 = Q()
+        q1.connector = 'OR'
+        for i in tags_input.split(" "):
+            q1.children.append(('tags__icontains', i))
 
-        for i in res:
-            for k in t:
-                if i.tags_obtained == k:
-                    images.append(i.image)
-                    #   print(type(i.image))
-                    continue
+        search_result = Artwork.objects.filter(q1)
 
-        # so this should be the line to search artworks
-        # store the searched results into this list, online store the url
+        if len(search_result) == 0:
+            message = 'Nothing found, try other tags'
+            return render(request, 'homepage/index.html', {'message': message})
+        for i in search_result:
+            if i.artwork_user.username != current_username:  # ensure the owner will not searched their own artworks
+                images.append([i.name, i.image.url])
+
+        # store the searched results into this list, only store the url
     return render(request, "artworks/searchresults.html", {'images': images})
 
 
@@ -76,7 +70,7 @@ def bookArt(request, pk):
                            'total_price_booking': total_price_booking, 'string_date': string_date})
 
 
-def ReviewBooking(request, checkin, checkout, artid, delta, total_price,total_price_booking,string_date):
+def ReviewBooking(request, checkin, checkout, artid, delta, total_price, total_price_booking, string_date):
     return render(request, 'finaliseBooking', {'checkin': checkin, 'checkout': checkout, 'artid': artid, 'delta': delta,
                                                'total_price_booking': total_price_booking, 'string_date': string_date})
 
