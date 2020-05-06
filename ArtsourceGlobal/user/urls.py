@@ -19,6 +19,7 @@ urlpatterns = [
     path('delete_artwork/', views.delete_artwork),
     path('booked_artwork/', views.booked_artwork),
     path('lent_artwork/', views.lent_artwork),
+    path('resubmit_artwork/', views.resubmit_artwork),
     url(r'^active/(?P<active_code>.*)/$', views.ActiveUserView.as_view(), name="user_active"),
     url(r'^reset/(?P<reset_code>.*)/$', views.UserResetView.as_view(), name="user_reset"),
     # (?P<active_code# >.*)/$ extract the string and assign to active_code

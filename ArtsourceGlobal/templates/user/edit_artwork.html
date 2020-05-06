@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit artwork</title>
+</head>
+<body>
+
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Log in{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <link rel="stylesheet" href="{% static 'css/cropper.css' %}">
+    <link rel="stylesheet" href="{% static 'css/upload_artwork.css' %}">
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/upload_artwork.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/tag_add.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/cropper.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-cropper.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="container" >
+    <div id="block-position">
+        <form  action="/user/resubmit_artwork/" method="post" enctype="multipart/form-data">
+            {% if message %}
+                <div class="alert alert-warning">{{ message }}</div>
+            {% endif %}
+
+            {% csrf_token %}
+            <h2 class="text-center">Welcome to Edit!</h2>
+            <input type="text" name="artwork_id" value="{{artwork_id}}" style="display: none">
+            <div class="form-register">The name of this artwork
+                <input type="text" name="name" id="name" maxlength="128" style="width: 400px" value="{{name}}">
+            </div>
+            <div class="form-register">The price you want (dollars/day)
+                <input type="number" step="1" name="price" id="price" maxlength="24" style="width: 400px" value="{{price}}">
+            </div>
+            <div class="form-register">Upload the image
+                <input type="file" accept="image/*" name="image" id="image" onchange="verificationPicFile(this)">
+            </div>
+
+            <div class="form-register">
+                <img src="{{image.url}}" id="demoImg"  alt="Cut the thumbnail after you upload">
+                <button type="button" id="cropbtn" class="btn btn-primary" onclick="drawImage()" style="display: none"> Submit the thumbnail</button>
+            </div>
+            <div class="form-register">The cropped image show here:
+                <img src="{{thumbnail.url}}" id="croppedImage" >
+            </div>
+
+            <div class="form-register" style="display: none">
+                <input type="text" name="thumbnail" id="thumbnail" >
+            </div>
+            <div class="form-register" style="margin-bottom: 20px">
+                <h6>The tags you chose, split by space for each tag:</h6>
+            <textarea type="text" name="tags" id="tags" maxlength="512"
+                     style="width: 400px; height: 24px; font-size:12px; margin-bottom: 3%">{{ tag_string }}</textarea>
+                <h6>Choose or enter tags here!</h6>
+            <input type="text" id="tagsInput" maxlength="128"  list="tagChoices" style="margin-bottom: 20px" >
+            <button type="button" onclick="TagChoice()">enter</button>
+            <datalist id="tagChoices">
+                {% for tag in tags %}
+                <option type="button" value="{{ tag }}"></option>
+                {% endfor %}
+            </datalist>
+            <div class="form-register">
+            <button type="reset" class="btn btn-default pull-left">reset</button>
+            <button type="submit" id="submit_button" class="btn btn-default pull-right">submit</button>
+            </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+</body>
+</html>

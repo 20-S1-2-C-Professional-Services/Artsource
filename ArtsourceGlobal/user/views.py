@@ -413,16 +413,52 @@ def upload_artwork(request):
         # TODO: finish the tag functions here
         tags_input = request.POST.get('tags')
         artwork.tags = tags_input
-        # t = tags_input
-        # s_filter = "~!@#$%^&*()_+-*/<>[]\/"
-        # for i in s_filter:
-        #     if i in t:
-        #         t = t.replace(i,'')
-        # t = t.replace(',', ' ')
-        # t = t.replace(';', ' ')
-        # t = t.replace('.', ' ')
-        # t = ' '.join(t.split())
+        # so this should be the line to store tags
+        # update the tags
+        for i in tags_input.split(" "):
+            if i not in tags:
+                tags.append(i)
+                new_tag = TagsNames()
+                new_tag.tag_names = i
+                new_tag.save()
+        artwork.save()
+        return redirect('/user/profile/')
+    return render(request, "user/upload_artwork.html", {'tags': tags})
 
+
+def resubmit_artwork(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        try:
+            artwork = Artwork.objects.get(name=name)
+        except Exception as e:
+            print(e)
+            message = "Can find this artwork!"
+            return render(request, "user/upload_artwork.html", {'message': message, 'tags': tags})
+        artwork.name = name
+        image_bytes = request.FILES.get('image').read()
+        image_io = io.BytesIO()
+        image_io.write(image_bytes)
+        image_file = InMemoryUploadedFile(image_io, None, '{}.jpg'.format(name), 'image/jpeg',
+                                          image_io.getbuffer().nbytes, None)
+
+        artwork.image = image_file
+
+        thumbnail = request.POST.get('thumbnail')
+        code = thumbnail.replace('data:image/jpeg;base64,', '')
+        thumb_data = base64.b64decode(code)
+        thumb_io = io.BytesIO()
+        thumb_io.write(thumb_data)
+        thumb_file = InMemoryUploadedFile(thumb_io, None, '{}.jpg'.format(name + "_thumbnail"), 'image/jpeg',
+                                          thumb_io.getbuffer().nbytes, None)
+        artwork.thumbnail = thumb_file
+        # save the price
+        artwork.price = request.POST.get('price')
+        # the code to get and store the tags
+
+        # TODO: finish the tag functions here
+        tags_input = request.POST.get('tags')
+        artwork.tags = tags_input
         # so this should be the line to store tags
         # update the tags
         for i in tags_input.split(" "):
@@ -448,7 +484,9 @@ def edit_artwork(request):
             image = artwork.image.url
             tag_string = artwork.tags
             price = artwork.price
-    return
+            thumbnail = artwork.thumbnail
+            artwork_id = artwork.id
+    return render(request, "user/edit_artwork.html", locals())
 
 
 def delete_artwork(request):
