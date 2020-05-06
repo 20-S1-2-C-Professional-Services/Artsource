@@ -31,7 +31,6 @@ pip install cryptography
 pip install pyOpenSSL
 pip install certifi
 
-
 create super user by:
 python manage.py createsuperuser
 

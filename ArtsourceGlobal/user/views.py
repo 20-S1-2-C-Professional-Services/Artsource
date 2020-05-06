@@ -410,7 +410,6 @@ def upload_artwork(request):
         artwork.price = request.POST.get('price')
         # the code to get and store the tags
 
-        # TODO: finish the tag functions here
         tags_input = request.POST.get('tags')
         artwork.tags = tags_input
         # so this should be the line to store tags
@@ -456,7 +455,6 @@ def resubmit_artwork(request):
         artwork.price = request.POST.get('price')
         # the code to get and store the tags
 
-        # TODO: finish the tag functions here
         tags_input = request.POST.get('tags')
         artwork.tags = tags_input
         # so this should be the line to store tags

@@ -19,8 +19,6 @@ def search(request):
     current_username = request.session.get('user_name')
     if request.method == 'POST':
         # the code to get and store the tags
-
-        # TODO: finish the tag functions here
         tags_input = request.POST.get('tags')  # this is the input string
 
         if len(tags_input) == 0:
@@ -31,8 +29,8 @@ def search(request):
         q1 = Q()
         q1.connector = 'OR'
         for i in tags_input.split(" "):
-            q1.children.append(('tags__icontains', i))
-
+            q1.children.append(('tags__icontains', i))  # search the tags column
+            q1.children.append(('name__icontains', i))  # search the name
         search_result = Artwork.objects.filter(q1)
 
         if len(search_result) == 0:
