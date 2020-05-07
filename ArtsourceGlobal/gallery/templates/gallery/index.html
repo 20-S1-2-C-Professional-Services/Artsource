@@ -107,7 +107,6 @@
 
 
 <div class="row no-gutters" style="width:65%; margin:auto">
-
           {% for a in display_artwork %}
           {% if forloop.first %}
             <div class="col-md-6">
@@ -124,13 +123,16 @@
     </div>
     <!-- Come back and add these style tags to the CSS later
      Also put categories in between the dump of every artwork and the featured artists-->
+    {% for category in categories %}
+    <p>{category.title}test</p>
+    {% endfor %}
     <div class="row no-gutters" style="width:65%; margin:auto">
         {% for a in artwork %}
             <div class="col-md-3">
                 <div class="img-container">
                 <a href="{% url 'artwork_detail' pk=a.pk %}">
                     <img class="img-thumbnail" alt="" src="{{a.thumbnail.url}}" style="border:1px solid black"></a>
-                    <font size="6" style="position: absolute;bottom: 0px;left: 16px; color: white;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000; ">{{a.name}}</font>
+                    <font size="6" style="position: absolute;bottom: 0px;left: 16px; color: white;text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000; ">{{a.title}}</font>
 
                 </div>
             </div>
