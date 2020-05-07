@@ -37,7 +37,7 @@ def search(request):
             message = 'Nothing found, try other tags'
             return render(request, 'homepage/index.html', {'message': message})
         for i in search_result:
-            if i.artwork_user.username != current_username:  # ensure the owner will not searched their own artworks
+            if i.artwork_user.username != current_username and not i.booked:  # ensure the owner will not searched their own artworks
                 images.append([i.name, i.image.url])
 
         # store the searched results into this list, only store the url

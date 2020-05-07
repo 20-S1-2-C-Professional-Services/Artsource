@@ -28,6 +28,10 @@ def bookArt(request, pk):
     art_id = int(float(pk))
     artwork = Artwork.objects.get(id=art_id)
 
+    if artwork.booked is None:
+        message = "This artwork was booked out already!"
+        return render(request, 'user/index.html', locals())
+
     if request.session.get('user_name') is None:
         message = "Please login first!"
         return render(request, 'user/login.html', locals())
@@ -70,6 +74,8 @@ def finish_booking(request):
         reservation.duration = float(duration.split(' ')[0])
         reservation.totalPrice = total_price
         reservation.save()
+        artwork.booked = True
+        artwork.save()
         message = 'successfully booked'
         send_notify_email(artwork.user.email, request.session.get('user_name'), name, 'book')
         return render(request, 'booking/review.html', {'message': message, 'checkin': checkin,
@@ -127,6 +133,8 @@ def cancel(request):
             send_notify_email(record.renter.email, record.renter.username, artwork_name, 'cancel')
             send_notify_email(record.owner.email, record.owner.username, artwork_name, 'cancel')
             record.delete()
+            artwork.booked = False
+            artwork.save()
             return redirect('/user/profile/', {'message': message})
     message = 'No order find'
     return redirect('/user/lent_artwork/', {'message': message})
