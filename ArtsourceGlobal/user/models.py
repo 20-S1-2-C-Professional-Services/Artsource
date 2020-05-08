@@ -57,7 +57,7 @@ class User(models.Model):
     refEmail = models.EmailField(unique=True, null=True)
     interest = models.OneToOneField(Interest, on_delete=models.CASCADE, null=True)
     additionalInfo = models.OneToOneField(AdditionalInfo, on_delete=models.CASCADE, null=True)
-
+    instagram_username = models.CharField(max_length=256, null=True)
     objects = models.Manager()
 
     def __str__(self):

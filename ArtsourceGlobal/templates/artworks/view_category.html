@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<title>Create Category</title>
+</head>
+<body>
+
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Create Category{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/image.css' %}">
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/imglist.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/upload_artwork.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/artwork_add.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/cropper.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-cropper.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="container" >
+    <div >
+        <div class="profile-tabs">
+           <ul class="nav nav-pills nav-pills-icons justify-content-center" role="tablist">
+             <li class="nav-item">
+                 <a class="nav-link" href="/user/profile" role="tab" data-toggle="tab">
+                   <i class="material-icons">Many orders</i>
+                   Manage orders
+                 </a>
+             </li>
+               <li class="nav-item">
+             <a class="nav-link" href="/artworkpage/view_category" role="tab" data-toggle="tab">
+               <i class="material-icons"></i>
+               View categories
+             </a>
+             </li>
+            <li class="nav-item">
+             <a class="nav-link" href="/artworkpage/create_category" role="tab" data-toggle="tab">
+               <i class="material-icons"></i>
+               Create categories
+             </a>
+             </li>
+           </ul>
+         </div>
+    </div>
+</div>
+
+<div class="imgLayoutPanel">
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
+    <li class="imgButtionList">
+        <button id="FourButton" title="Four images each row" onclick="FourImagesOneLine()">
+            4/row
+        </button>
+        <button id="ThreeButton" title="Three images each row" onclick="ThreeImagesOneLine()">
+            3/row
+        </button>
+        <button id="TwoButton" title="Two images each row" onclick="TwoImagesOneLine()">
+            2/row
+        </button>
+    </li>
+</div>
+<div class="imagePage">
+{% if categories %}
+    <ul class="imgList" >
+         {% for item in categories %}
+    <li >
+        <p style="text-align:center; font-size: 32px">{{ item.title }}</p>
+
+        <form  class="form-register" action="/artworkpage/edit_category/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" style="display: none" value="{{item.title}}" name="category_title">
+        <button type="submit" class="btn btn-white" style="float: left; width: 32%; margin-left: 5%; margin-right: 16%">Edit</button>
+        </form>
+        <form  class="form-register" action="/artworkpage/delete_category/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+        <input type="text" style="display: none" value="{{item.title}}" name="category_title">
+        <button type="submit" class="btn btn-warning" style="width:42%; float: left">Delete</button>
+        </form>
+
+        <img class="image" src="{{ item.banner.url }}" >
+        <p style="text-align:center; font-size: 32px">The names of artworks you chose: {{ item.artwork_name_list }}</p>
+        {% for artwork in item.artwork_list.all %}
+        <p style="text-align:center; font-size: 32px">The name is {{ artwork.name }}</p>
+        <img class="image" src="{{ artwork.image.url }}" >
+        {% endfor %}
+    </li>
+   {% endfor %}
+
+    </ul>
+
+{% endif %}
+</div>
+{% endblock %}
+</body>
+</html>

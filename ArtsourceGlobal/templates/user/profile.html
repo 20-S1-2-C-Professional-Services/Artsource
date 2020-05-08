@@ -19,37 +19,65 @@
 
 
 {% block content %}
+{% if admin %}
+<div class="container" >
+    <div >
+        <div class="profile-tabs">
+           <ul class="nav nav-pills nav-pills-icons justify-content-center" role="tablist">
+             <li class="nav-item">
+                 <a class="nav-link" href="/user/profile" role="tab" data-toggle="tab">
+                   <i class="material-icons">Many orders</i>
+                   Manage orders
+                 </a>
+             </li>
+               <li class="nav-item">
+             <a class="nav-link" href="/artworkpage/view_category" role="tab" data-toggle="tab">
+               <i class="material-icons"></i>
+               View categories
+             </a>
+             </li>
+            <li class="nav-item">
+             <a class="nav-link" href="/artworkpage/create_category" role="tab" data-toggle="tab">
+               <i class="material-icons"></i>
+               Create categories
+             </a>
+             </li>
+           </ul>
+         </div>
+    </div>
+</div>
+{% else %}
 <div class="container" >
     <div id="block-position">
         <div class="profile-tabs">
            <ul class="nav nav-pills nav-pills-icons justify-content-center" role="tablist">
              <li class="nav-item">
                  <a class="nav-link" href="/user/profile" role="tab" data-toggle="tab">
-                   <i class="material-icons">book</i>
+                   <i class="material-icons">Your artworks</i>
                    Your artworks
                  </a>
              </li>
              <li class="nav-item">
                  <a class="nav-link" href="/user/upload_artwork" role="tab" data-toggle="tab">
-                   <i class="material-icons">palette</i>
+                   <i class="material-icons">Upload new Art</i>
                     Upload new Art
                  </a>
              </li>
              <li class="nav-item">
                  <a class="nav-link" href="/user/booked_artwork" role="tab" data-toggle="tab">
-                   <i class="material-icons">favorite</i>
+                   <i class="material-icons">Art booked</i>
                      Art booked
                  </a>
              </li>
             <li class="nav-item">
                  <a class="nav-link" href="/user/lent_artwork" role="tab" data-toggle="tab">
-                   <i class="material-icons">favorite</i>
+                   <i class="material-icons">Art lent out</i>
                      Art lent out
                  </a>
              </li>
              <li class="nav-item">
                  <a class="nav-link" href="/user/editProfile" role="tab" data-toggle="tab">
-                   <i class="material-icons">favorite</i>
+                   <i class="material-icons">Edit profile</i>
                      Edit profile
                  </a>
              </li>
@@ -57,10 +85,11 @@
          </div>
     </div>
 </div>
+{% endif %}
 <div class="imgLayoutPanel">
-                {% if message %}
-                    <div class="alert alert-warning">{{ message }}</div>
-                {% endif %}
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
     <li class="imgButtionList">
         <button id="FourButton" title="Four images each row" onclick="FourImagesOneLine()">
             4/row
@@ -100,11 +129,12 @@
         <input type="text" style="display: none" value="{{item.0}}" name="name">
         <button type="submit" class="btn btn-white" style="float: left; width: 32%; margin-left: 5%; margin-right: 16%">Review</button>
         </form>
-        {% else %}
+        <!--    TODO:    The below commented-out code show the buttons that let user confirm the book-->
+        {% elif admin %}
         <form  class="form-register" action="/booking/accept/" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="text" style="display: none" value="{{item.0}}" name="name">
-        <button type="submit" class="btn btn-white" style="float: left; width: 32%; margin-left: 5%; margin-right: 16%">Confirm</button>
+        <button type="submit" class="btn btn-white" style="float: left; width: 48%; margin-left: 5%; margin-right: 4%">Confirm</button>
         </form>
          <form  class="form-register" action="/booking/cancel/" method="post" enctype="multipart/form-data">
             {% csrf_token %}

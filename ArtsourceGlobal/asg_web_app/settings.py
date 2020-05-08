@@ -34,11 +34,11 @@ ALLOWED_HOSTS = ['asg-web-app-dev.ap-southeast-2.elasticbeanstalk.com', 'localho
 # Application definition
 
 INSTALLED_APPS = [
+    'user',
     'homepage',
     'gallery',
     'user_profile',
     'artworkpage',
-    'user',
     'booking',
     'captcha',
     'terms',

@@ -27,7 +27,7 @@
                 {% endif %}
 
                 {% csrf_token %}
-
+                <input type="text" name="instagram_username" style="display: none" value="{{instagram_username}}">
                 <h2 class="text-center">Welcome register</h2>
                 <div class="form-entry">
                     {{ register_form.username.label_tag }}

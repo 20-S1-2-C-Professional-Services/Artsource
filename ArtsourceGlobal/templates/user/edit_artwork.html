@@ -17,7 +17,7 @@
 {% block js %}
     <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/upload_artwork.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/tag_add.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/artwork_add.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/cropper.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery-cropper.js' %}"></script>
 
@@ -33,13 +33,40 @@
 
             {% csrf_token %}
             <h2 class="text-center">Welcome to Edit!</h2>
+            <input type="text" name="upload_type" style="display: none" value="edit">
             <input type="text" name="artwork_id" value="{{artwork_id}}" style="display: none">
             <div class="form-register">The name of this artwork
                 <input type="text" name="name" id="name" maxlength="128" style="width: 400px" value="{{name}}">
             </div>
             <div class="form-register">The price you want (dollars/day)
-                <input type="number" step="1" name="price" id="price" maxlength="24" style="width: 400px" value="{{price}}">
+                <input type="number" step="1" name="price" id="price" maxlength="24" style="width: 400px" value="{{price}}" required="required">
             </div>
+
+             <div class="form-register">Input the length (m)
+                <input type="number" step="1" name="length" maxlength="24" style="width: 400px" value="{{length}}" required="required">
+            </div>
+            <div class="form-register">Input the width (m)
+                <input type="number" step="1" name="width"  maxlength="24" style="width: 400px" value="{{width}}" required="required">
+            </div>
+            <div class="form-register">Input the height (m)
+                <input type="number" step="1" name="height" maxlength="24" style="width: 400px" value="{{height}}" required="required">
+            </div>
+
+            <div class="form-register" style="margin-bottom: 20px">
+                <h6>The artists you chose, split by space, max length: 512 characters</h6>
+            <textarea name="artists" id="artists" maxlength="512"
+                       style="width: 400px; height: 24px; font-size:12px; margin-bottom: 3%">{{ artists_string }}</textarea>
+                <h6>Choose or enter artists here!</h6>
+            <input type="text" id="artistsInput" maxlength="128"  list="artistsChoices" style="margin-bottom: 20px" >
+            <button type="button" onclick="ArtistChoice()">enter</button>
+            <datalist id="artistsChoices">
+                {% for artist in artists %}
+                <option type="button" value="{{ artist.1 }},{{artist.0}}"></option>
+                {% endfor %}
+            </datalist>
+            </div>
+
+
             <div class="form-register">Upload the image
                 <input type="file" accept="image/*" name="image" id="image" onchange="verificationPicFile(this)">
             </div>

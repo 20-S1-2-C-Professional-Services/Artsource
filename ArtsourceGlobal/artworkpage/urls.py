@@ -10,6 +10,12 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('search/', views.search),
+    path('recommend/', views.recommend),
+    path('view_category/', views.view_category),
+    path('create_category/', views.create_category),
+    path('edit_category/', views.edit_category),
+    path('delete_category/', views.delete_category),
+    path('change_category/', views.change_category),
     path('booking/<int:pk>/', views.booking_detail, name='booking_detail'),
     re_path('booking/(?P<pk>\d+)', views.bookArt, name='booking'),
     # path('booking/review', views.finaliseBooking, name='review'),

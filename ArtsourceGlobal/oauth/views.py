@@ -42,7 +42,8 @@ def instagram_callback(request):
     register_form = RegisterForm(initial={
         'username': username,
     })
-    return render(request, "user/register.html", {'message': message, 'register_form': register_form})
+    return render(request, "user/register.html", {'message': message, 'register_form': register_form,
+                                                  'instagram_username':username})
 
 
 #
