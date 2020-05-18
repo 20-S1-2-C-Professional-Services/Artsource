@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from artworkpage.models import Artwork
 from artworkpage.models import TagsNames
+from django.template import RequestContext
 
 # Create your views here.
 def index(request):

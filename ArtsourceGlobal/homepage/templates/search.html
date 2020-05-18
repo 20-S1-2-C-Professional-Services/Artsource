@@ -31,7 +31,7 @@
                 <li><a href="/user/login/">Login</a></li>
                 <li><a href="/user/register_middle/">Register</a></li>
             </ul>
-            <form method="post" class="navbar-form navbar-right">
+            <form method="post" class="navbar-form navbar-right">{% csrf_token %}
                 <input type="text" name="sss" class="form-control" placeholder="Global Search...">
             </form>
         </div>
