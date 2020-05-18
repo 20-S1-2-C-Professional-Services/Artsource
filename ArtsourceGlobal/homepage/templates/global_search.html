@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>global_search</title>
+    <link rel="stylesheet" href={% static 'homepage/plugins/bootstrap-3.3.7-dist/css/bootstrap.min.css' %}>
+    <link rel="stylesheet" href={% static 'homepage/css/global_search.css' %}>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th>index</th>
+        <th>Name</th>
+        <th>Tags</th>
+        <th>Thumbnail</th>
+        <th>Height/cm</th>
+        <th>Length</th>
+        <th>Price</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {% for i in tt %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.name }}</td>
+            <td>{{ i.tags }}</td>
+            <td><img src="/media/{{ i.thumbnail }}"><br/></td>
+            <td>{{ i.height }}</td>
+            <td>{{ i.length }}</td>
+            <td>{{ i.price }}</td>
+            <td>{{ i.description }}</td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+<a href="/search/">Back to Search</a>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+{#    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>#}
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
