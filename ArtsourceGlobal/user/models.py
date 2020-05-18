@@ -6,7 +6,7 @@ from django_countries.fields import CountryField
 
 
 class Interest(models.Model):
-    # Painting, sculpture, photography, calligraphy, printmaking, arts and crafts, seal cutting, art design
+    # Painting, sculpture, photography, calligraphy, printmaking, arts and crafts, seal carving, art design
     painting = models.BooleanField(default=False)
     sculpture = models.BooleanField(default=False)
     photography = models.BooleanField(default=False)
