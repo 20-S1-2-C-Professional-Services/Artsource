@@ -22,8 +22,9 @@ def random_str(length=8):
     return string
 
 
+# TODO: change the referee_email
 # send email that verify user by system
-def send_code_email(email, referee_email='eeyzs1@zoho.com', send_type="register", real_name='', is_artist=False):
+def send_code_email(email, referee_email='', send_type="register", real_name='', is_artist=False):
     """
     :param is_artist: check the register is for artist or not
     :param referee_email: the email of referee's email
