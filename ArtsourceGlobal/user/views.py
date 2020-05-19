@@ -435,7 +435,7 @@ def upload_artwork(request):
         user = models.User.objects.get(username=current_user_name)
         artwork.name = name
         artwork.description = request.POST.get('description')
-        artwork.length = request.POST.get('length')
+        artwork.length = 0 #request.POST.get('length') ## This is not a necessary value for MVP I think, temporarily removed - JT
         artwork.width = request.POST.get('width')
         artwork.height = request.POST.get('height')
         if request.FILES.get('image') is not None:
@@ -461,15 +461,20 @@ def upload_artwork(request):
         # the code to get and store the tags
 
         tags_input = request.POST.get('tags')
+        # Make the input more robust
         artwork.tags = tags_input
+
         # so this should be the line to store tags
         # update the tags
-        for i in tags_input.split(" "):
-            if i not in tags:
-                tags.append(i)
-                new_tag = TagsNames()
-                new_tag.tag_names = i
-                new_tag.save()
+        if len(tags_input.replace(" ", "")) > 0:
+            for i in tags_input.split(" "):
+                if i not in tags:
+                    print(i)
+                    print(tags)
+                    tags.append(i)
+                    new_tag = TagsNames()
+                    new_tag.tag_names = i
+                    new_tag.save()
         artists_input = request.POST.get('artists')
         artwork.artists_string = artists_input
         artwork.save()

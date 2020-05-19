@@ -1,15 +1,32 @@
 
-function TagChoice(){
-var taginput=document.getElementById('tagsInput');
-var tags=document.getElementById('tags');
-if(taginput.value.length>0){
-    if(tags.value.length>0){
-    tags.value=tags.value+" "+taginput.value;
-    }else{
-        tags.value=taginput.value;
+function TagChoice()
+{
+    var taginput=document.getElementById('tagsInput');
+    var tags=document.getElementById('tags');
+    if(taginput.value.length>0)
+    {
+        cleanedInput = cleanInputValue(taginput.value);
+        if(tags.value.length>0)
+        {
+            tags.value = tags.value + " "+ cleanedInput;
+        }
+        else
+        {
+            tags.value = cleanedInput;
+        }
     }
+    taginput.value = "";
 }
-taginput.value="";
+
+//Make the input more robust, can be expanded on later
+function cleanInputValue(startingValue)
+{
+    while(startingValue.includes("  ") || startingValue.includes(","))
+    {
+        startingValue = startingValue.replace(",", " ");
+        startingValue = startingValue.replace("  ", " ")
+    }
+    return startingValue;
 }
 
 function ArtistChoice(){
