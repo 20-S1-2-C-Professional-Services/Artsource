@@ -56,7 +56,7 @@ def search(request):
             if i.booked or i.user == current_username:
                 continue
             art_list.append(i)
-            images.append([i.name, i.image.url])
+            # images.append([i.name, i.image.url])
 
         for i in art_list:
             name = ""
@@ -102,7 +102,7 @@ def simplesearch(request):
             if i.booked or i.user == current_username:
                 continue
             art_list.append(i)
-            images.append([i.name, i.image.url])
+            # images.append([i.name, i.image.url])
 
         for i in art_list:
             name = ""
