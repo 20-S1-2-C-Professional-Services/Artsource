@@ -421,11 +421,12 @@ def upload_artwork(request):
         if name == "":
             name = "Untitled"
         # Names should not have to be unique, this should be fixed later
+        # TODO I have removed the unique requirement, it should be tested that this does not break the process
         if upload_type == 'upload':
-            if Artwork.objects.filter(name=name):
-                message = "This name already exist!"
-                return render(request, "user/upload_artwork.html", {'message': message, 'tags': tags})
-            elif request.POST.get('image') == '' or request.POST.get('thumbnail') == '':
+            # if Artwork.objects.filter(name=name):
+            #     message = "This name already exist!"
+            #     return render(request, "user/upload_artwork.html", {'message': message, 'tags': tags})
+            if request.POST.get('image') == '' or request.POST.get('thumbnail') == '':
                 return render(request, "user/upload_artwork.html", {'message': "Please upload an image and thumbnail!", 'tags': tags})
             else:
                 artwork = Artwork()

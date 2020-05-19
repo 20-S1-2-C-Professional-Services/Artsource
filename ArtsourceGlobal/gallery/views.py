@@ -11,5 +11,5 @@ from itertools import chain
 def index(request):
     all_artworks = Artwork.objects.filter(booked=False)
     display_artwork = all_artworks[0:2]
-    artwork = all_artworks[3:]
+    artwork = all_artworks[2:]
     return render(request, 'gallery/index.html', {'artwork': artwork, 'display_artwork': display_artwork, 'categories': Category.objects.all()})

@@ -19,7 +19,7 @@ class TagsNames(models.Model):
 class Artwork(models.Model):
     """Artwork table"""
 
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=128)
     image = models.ImageField(upload_to='Img')
     thumbnail = models.ImageField(upload_to='Thumbnail')
     user = models.ForeignKey(User, related_name='artwork_user', on_delete=models.CASCADE)
