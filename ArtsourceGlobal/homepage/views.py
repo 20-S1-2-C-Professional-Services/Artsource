@@ -31,37 +31,35 @@ def booking_detail(request, pk):
     return render(request, './booking/bookart.html', {'artid': artid})
 
 
-
 def search(request):
-    art_list = Artwork.objects.all()
-    name_list = []
-    for i in art_list:
-        name = ""
-        names = i.artists.all()
-        for n in names:
-            name += n.artist_names + " "
-        name_list.append(name)
-
     if request.method == 'GET':
-        return render(request, 'artworks/search.html', {'tt': art_list, 'dd': list(reversed(name_list))})
-    elif request.method == 'POST':
-        s_target = request.POST.get('sss')
-        res = []
-        res2 = []
-        for i in Artwork.objects.all():
-            a = i.name
-            b = i.description
-            c = i.tags
-            d = ""
+        art_list = Artwork.objects.all()
+        name_list = []
+        for i in art_list:
+            name = ""
             names = i.artists.all()
             for n in names:
-                d += n.artist_names + " "
-
-            if a.__contains__(s_target) or b.__contains__(s_target) or c.__contains__(s_target) or d.__contains__(
-                    s_target):
-                res.append(i)
-                res2.append(d)
-
-        return render(request, 'artworks/global_search.html', {'tt': res, 'dd': list(reversed(res2))})
-    else:
-        return redirect('/search.html/')
+                name += n.artist_names + " "
+            name_list.append(name)
+        return render(request, 'artworks/search.html', {'tt': art_list, 'dd': list(reversed(name_list))})
+    # elif request.method == 'POST':
+    #     s_target = request.POST.get('sss')
+    #     res = []
+    #     res2 = []
+    #     for i in Artwork.objects.all():
+    #         a = i.name
+    #         b = i.description
+    #         c = i.tags
+    #         d = ""
+    #         names = i.artists.all()
+    #         for n in names:
+    #             d += n.artist_names + " "
+    #
+    #         if a.__contains__(s_target) or b.__contains__(s_target) or c.__contains__(s_target) or d.__contains__(
+    #                 s_target):
+    #             res.append(i)
+    #             res2.append(d)
+    #
+    #     return render(request, 'artworks/global_search.html', {'tt': res, 'dd': list(reversed(res2))})
+    # else:
+    #     return redirect('/search.html/')
