@@ -17,6 +17,10 @@ The purpose of this team is to build a direct platform between artists and custo
 * [Meetings](https://github.com/20-S1-2-C-Professional-Services/Professional-Services-Artsource/wiki/Meetings)
 * [Statement of Work](https://github.com/20-S1-2-C-Professional-Services/Professional-Services-Artsource/wiki/Statement-of-Work)
 * [GoogleDrive](https://drive.google.com/drive/folders/1Xfq7Ruo_GspdJjo7WOUox2QbkW-Op9S2)
+* [Audit1](https://drive.google.com/drive/folders/1oV2Mhp6lP0EoTuavfZY_qlEK8PDa_ieQ)
+* [Audit2](https://drive.google.com/drive/folders/1owdUfHVGZ3We2gf9bCsO31lWry5L-qVJ)
+* [Audit3](https://drive.google.com/drive/folders/1074hWQg-ph-ZGHu-_pMedAmiTNZvrGKm)
+
 
 # **Project Members**
 
