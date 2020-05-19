@@ -21,6 +21,8 @@ def index(request):
 # TODO: add the tag search functions here
 def search(request):
     images = []
+    art_list = []
+    name_list = []
     current_username = request.session.get('user_name')
     if request.method == 'POST':
         # the code to get and store the tags
@@ -37,16 +39,28 @@ def search(request):
             q1.children.append(('tags__icontains', i))  # search the tags column
             q1.children.append(('name__icontains', i))  # search the name
         search_result = Artwork.objects.filter(q1)
-
         if len(search_result) == 0:
             message = 'Nothing found, try other tags'
             return render(request, 'user/index.html', {'message': message})
+
+
         for i in search_result:
-            if i.artwork_user.username != current_username and not i.booked:  # ensure the owner will not searched their own artworks
-                images.append([i.name, i.image.url])
+            # if i.artwork_user != current_username and not i.booked:  # ensure the owner will not searched their own artworks
+            if i.booked or i.user == current_username:
+                continue
+            art_list.append(i)
+            images.append([i.name, i.image.url])
+
+        for i in art_list:
+            name = ""
+            names = i.artists.all()
+            for n in names:
+                name += n.artist_names + " "
+            name_list.append(name)
 
         # store the searched results into this list, only store the url
-    return render(request, "artworks/searchresults.html", {'images': images})
+    return render(request, 'search.html', {'tt': art_list, 'dd': list(reversed(name_list))})
+    # return render(request, "artworks/searchresults.html", {'images': images})
 
 
 def recommend(request):
