@@ -67,20 +67,14 @@
                 <li class="">
                     <div class="" style="color: orangered; padding: 2.6rem 1.5rem;">
                         Hi ! {{ request.session.user_name }} !
-                        
                     </div>
-                    
                 </li>
                 <li class="">
-                    
                     <a href="/user/logout" class="logout" style="color: #002752; padding: 2.6rem 1.5rem; text-decoration: underline">logout</a>
-                    
                 </li>
                 
                 <li class="">
-                    
                     <a href="/user/profile" style="color: #002752; padding: 2.6rem 1.5rem; text-decoration: underline">Dashboard</a>
-                    
                 </li>
                 {% else %}
                 <a href="/user/login" id ="header-signin" class="nav-link js-scroll-trigger"><button class="button-signin"> LOG IN </button></a>

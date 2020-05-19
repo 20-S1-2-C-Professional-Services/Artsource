@@ -17,7 +17,7 @@
 {% block js %}
     <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/upload_artwork.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/tag_add.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/artwork_add.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/cropper.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery-cropper.js' %}"></script>
 
@@ -33,13 +33,41 @@
 
             {% csrf_token %}
             <h2 class="text-center">Welcome to upload!</h2>
-
+            <input type="text" name="upload_type" style="display: none" value="upload">
             <div class="form-register">Input the name of this artwork
                 <input type="text" name="name" id="name" maxlength="128" style="width: 400px">
             </div>
-            <div class="form-register">Input the price you want (dollars/day)
-                <input type="number" step="1" name="price" id="price" maxlength="24" style="width: 400px">
+            <div class="form-register">Input the description of this artwork, max length: 512 characters
+                <textarea name="description" id="description" maxlength="512" style="width: 400px"></textarea>
             </div>
+            <div class="form-register">Input the price you want (dollars/day)
+                <input type="number" step="1" name="price" maxlength="24" style="width: 400px" required="required">
+            </div>
+
+            <div class="form-register">Input the length (m)
+                <input type="number" step="1" name="length" maxlength="24" style="width: 400px" required="required">
+            </div>
+            <div class="form-register">Input the width (m)
+                <input type="number" step="1" name="width"  maxlength="24" style="width: 400px" required="required">
+            </div>
+            <div class="form-register">Input the height (m)
+                <input type="number" step="1" name="height" maxlength="24" style="width: 400px" required="required">
+            </div>
+
+            <div class="form-register" style="margin-bottom: 20px">
+                <h6>The artists you chose, max length: 512 characters</h6>
+            <textarea name="artists" id="artists" maxlength="512"
+                      readonly="readonly" style="width: 400px; height: 24px; font-size:12px; margin-bottom: 3%"></textarea>
+                <h6>Choose or enter artists here! Should in form like (Leonardo.da.Vinci) If you cannot find, then type the name</h6>
+            <input type="text" id="artistsInput" maxlength="128"  list="artistsChoices" style="margin-bottom: 20px" >
+            <button type="button" onclick="ArtistChoice()">enter</button>
+            <datalist id="artistsChoices">
+                {% for artist in artists %}
+                <option type="button" value="{{ artist.1 }},{{artist.0}}"></option>
+                {% endfor %}
+            </datalist>
+            </div>
+
             <div class="form-register">Upload the image
                 <input type="file" accept="image/*" name="image" id="image" onchange="verificationPicFile(this)">
             </div>
@@ -56,8 +84,8 @@
                 <input type="text" name="thumbnail" id="thumbnail" >
             </div>
             <div class="form-register" style="margin-bottom: 20px">
-                <h6>The tags you chose</h6>
-            <textarea type="text" name="tags" id="tags" maxlength="512"
+                <h6>The tags you chose, max length: 512 characters</h6>
+            <textarea name="tags" id="tags" maxlength="512"
                       readonly="readonly" style="width: 400px; height: 24px; font-size:12px; margin-bottom: 3%"></textarea>
                 <h6>Choose or enter tags here!</h6>
             <input type="text" id="tagsInput" maxlength="128"  list="tagChoices" style="margin-bottom: 20px" >

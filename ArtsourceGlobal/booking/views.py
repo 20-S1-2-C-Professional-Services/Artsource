@@ -59,12 +59,12 @@ def bookArt(request, pk):
 
 def finish_booking(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
+        artwork_name = request.POST.get('name')
         checkin = request.POST.get('checkin')
         checkout = request.POST.get('checkout')
         total_price = request.POST.get('total_price')
         duration = request.POST.get('duration')
-        artwork = Artwork.objects.get(name=name)
+        artwork = Artwork.objects.get(name=artwork_name)
         reservation = Reservation()
         reservation.artwork_booked = artwork
         reservation.owner = artwork.user
@@ -74,12 +74,15 @@ def finish_booking(request):
         reservation.duration = float(duration.split(' ')[0])
         reservation.totalPrice = total_price
         reservation.save()
-        artwork.booked = True
         artwork.save()
         message = 'successfully booked'
-        send_notify_email(artwork.user.email, request.session.get('user_name'), name, 'book')
+
+        #  TODO: the notification email, just one line
+        # The artwork.user.email should be changed to JILL's email
+        send_notify_email(artwork.user.email, request.session.get('user_name'), artwork_name, 'book')
+
         return render(request, 'booking/review.html', {'message': message, 'checkin': checkin,
-                                                       'checkout': checkout, 'name': name,
+                                                       'checkout': checkout, 'name': artwork_name,
                                                        'single_price': artwork.price, 'duration': duration,
                                                        'total_price': total_price})
 
@@ -130,6 +133,7 @@ def cancel(request):
         artwork.booked = True
         if artwork.artwork_booked is not None:
             record = Reservation.objects.get(id=artwork.artwork_booked.first().id) # get the reservation record here
+
             send_notify_email(record.renter.email, record.renter.username, artwork_name, 'cancel')
             send_notify_email(record.owner.email, record.owner.username, artwork_name, 'cancel')
             record.delete()

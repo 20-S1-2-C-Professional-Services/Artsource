@@ -11,12 +11,14 @@ from .email_send import send_code_email
 from .form import UserForm, RegisterForm, ProfileForm, ResetForm, RetrieveForm, UploadForm
 import hashlib
 from PIL import Image
-from artworkpage.models import TagsNames
+from artworkpage.models import TagsNames, ArtistNames, Artwork
 from .models import EmailVerifyRecord
-from artworkpage.models import Artwork
 from booking.models import Reservation
 from artworkpage.Image_tools import crop
 import base64
+import os
+from django.contrib import auth
+from django.contrib.auth.models import User as AdminUser
 
 
 class ActiveUserView(View):
@@ -135,7 +137,11 @@ def login(request):
 
 
 def index(request):
-    pass
+    user_id = request.session.get('_auth_user_id')
+    if user_id is not None:
+        request.session['is_login'] = True
+        request.session['user_id'] = user_id
+        request.session['user_name'] = 'Administrator'
     return render(request, 'user/index.html')
 
 
@@ -195,6 +201,7 @@ def register(request):
 
                     # create the user
                     new_user = models.User()
+                    new_user.instagram_username = request.POST.get('instagram_username')
                     new_user.username = username
                     # use encrypted password
                     new_user.password = hash_code(password1)
@@ -287,6 +294,23 @@ def hash_code(s, salt='artsource'):
 
 
 def profile(request):
+    # TODO: currently I put the interface to show admin tool here, maybe change later
+    user_id = request.session.get('_auth_user_id')
+    if user_id is not None:
+        admin = auth.models.User.objects.get(id=user_id)
+        if admin.is_superuser:
+            images = []
+            booked_records = Reservation.objects.all()
+            for record in booked_records:
+                if record.artwork_booked is not None:
+                    if record.artwork_booked.booked:
+                        images.append([record.artwork_booked.name, record.artwork_booked.image.url, True])
+                    else:
+                        images.append([record.artwork_booked.name, record.artwork_booked.image.url])
+
+            return render(request, 'user/profile.html', {"lent": True, "images": images, "admin": True})
+
+    # The normal user's profile
     current_user_name = request.session.get('user_name')
     user = models.User.objects.get(username=current_user_name)
     images = []
@@ -373,29 +397,53 @@ def register_middle(request):
 
 # this tag list should be empty, I set values for test
 tags = ['dog', 'peppers', 'mandm', 'mountain', 'civilization']
+artists_list = []
 
 
 def upload_artwork(request):
     global tags
     if not len(tags):
-        tags = TagsNames.objects.values_list("tag_names")
+        tags = TagsNames.objects.values_list("tag_names", flat=True)
+        if not len(tags):
+            tags = []
+
+    global artists_list
+    if not len(artists_list):
+        current_artists_list = ArtistNames.objects.values_list("id", "artist_names")
+        for i in current_artists_list:
+            artists_list.append((i[0], i[1]))
 
     if request.method == 'POST':
+        upload_type = request.POST.get('upload_type')
         name = request.POST.get('name')
-        if Artwork.objects.filter(name=name):
-            message = "This name already exist!"
-            return render(request, "user/upload_artwork.html", {'message': message, 'tags': tags})
-        artwork = Artwork()
+        if upload_type == 'upload':
+            if Artwork.objects.filter(name=name):
+                message = "This name already exist!"
+                return render(request, "user/upload_artwork.html", {'message': message, 'tags': tags})
+            else:
+                artwork = Artwork()
+        else:
+            try:
+                artwork = Artwork.objects.get(name=name)
+            except Exception as e:
+                print(e)
+                message = "Can find this artwork!"
+                return render(request, "user/upload_artwork.html", {'message': message, 'tags': tags})
         current_user_name = request.session.get('user_name')
         user = models.User.objects.get(username=current_user_name)
         artwork.name = name
-        image_bytes = request.FILES.get('image').read()
-        image_io = io.BytesIO()
-        image_io.write(image_bytes)
-        image_file = InMemoryUploadedFile(image_io, None, '{}.jpg'.format(name), 'image/jpeg',
-                                          image_io.getbuffer().nbytes, None)
+        artwork.description = request.POST.get('description')
+        artwork.length = request.POST.get('length')
+        artwork.width = request.POST.get('width')
+        artwork.height = request.POST.get('height')
+        if request.FILES.get('image') is not None:
+            image_bytes = request.FILES.get('image').read()
+            image_io = io.BytesIO()
+            image_io.write(image_bytes)
+            image_file = InMemoryUploadedFile(image_io, None, '{}.jpg'.format(name), 'image/jpeg',
+                                              image_io.getbuffer().nbytes, None)
 
-        artwork.image = image_file
+            artwork.image = image_file
 
         thumbnail = request.POST.get('thumbnail')
         code = thumbnail.replace('data:image/jpeg;base64,', '')
@@ -421,59 +469,39 @@ def upload_artwork(request):
                 new_tag.tag_names = i
                 new_tag.save()
         artwork.save()
+
+        artists_input = request.POST.get('artists')
+        for i in artists_input.split(" "):
+            artist_info = i.split(",")
+            if len(artist_info) > 1:
+                exist_artist = ArtistNames.objects.filter(id=artist_info[1])
+                if exist_artist:
+                    if not artwork.artists.filter(id=artist_info[1]):
+                        artwork.artists.add(ArtistNames.objects.get(id=artist_info[1]))
+            else:
+                new_artist = ArtistNames()
+                new_artist.artist_names = artist_info[0]
+                new_artist.save()
+                artwork.artists.add(new_artist)
+                artists_list.append((artist_info[0], new_artist.id))
+
         return redirect('/user/profile/')
-    return render(request, "user/upload_artwork.html", {'tags': tags})
 
-
-def resubmit_artwork(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        try:
-            artwork = Artwork.objects.get(name=name)
-        except Exception as e:
-            print(e)
-            message = "Can find this artwork!"
-            return render(request, "user/upload_artwork.html", {'message': message, 'tags': tags})
-        artwork.name = name
-        image_bytes = request.FILES.get('image').read()
-        image_io = io.BytesIO()
-        image_io.write(image_bytes)
-        image_file = InMemoryUploadedFile(image_io, None, '{}.jpg'.format(name), 'image/jpeg',
-                                          image_io.getbuffer().nbytes, None)
-
-        artwork.image = image_file
-
-        thumbnail = request.POST.get('thumbnail')
-        code = thumbnail.replace('data:image/jpeg;base64,', '')
-        thumb_data = base64.b64decode(code)
-        thumb_io = io.BytesIO()
-        thumb_io.write(thumb_data)
-        thumb_file = InMemoryUploadedFile(thumb_io, None, '{}.jpg'.format(name + "_thumbnail"), 'image/jpeg',
-                                          thumb_io.getbuffer().nbytes, None)
-        artwork.thumbnail = thumb_file
-        # save the price
-        artwork.price = request.POST.get('price')
-        # the code to get and store the tags
-
-        tags_input = request.POST.get('tags')
-        artwork.tags = tags_input
-        # so this should be the line to store tags
-        # update the tags
-        for i in tags_input.split(" "):
-            if i not in tags:
-                tags.append(i)
-                new_tag = TagsNames()
-                new_tag.tag_names = i
-                new_tag.save()
-        artwork.save()
-        return redirect('/user/profile/')
-    return render(request, "user/upload_artwork.html", {'tags': tags})
+    return render(request, "user/upload_artwork.html", {'tags': tags, 'artists': artists_list})
 
 
 def edit_artwork(request):
     global tags
     if not len(tags):
-        tags = TagsNames.objects.values_list("tag_names")
+        tags = TagsNames.objects.values_list("tag_names", flat=True)
+        if not len(tags):
+            tags = []
+
+    global artists_list
+    if not len(artists_list):
+        artists_list = ArtistNames.objects.values_list("id", "artist_names")
+        if not len(artists_list):
+            artists_list = []
     if request.method == 'POST':
         name = request.POST.get('name')
         artwork = Artwork.objects.filter(name=name).first()
@@ -484,6 +512,11 @@ def edit_artwork(request):
             price = artwork.price
             thumbnail = artwork.thumbnail
             artwork_id = artwork.id
+            related_artists = artwork.artists.all()
+            artists_string = ""
+            for i in related_artists:
+                artists_string = artists_string + " " + i.artist_names + "," + i.id
+
     return render(request, "user/edit_artwork.html", locals())
 
 
@@ -492,7 +525,11 @@ def delete_artwork(request):
         name = request.POST.get('name')
         artwork = Artwork.objects.filter(name=name).first()
         if artwork:
-            artwork.delete()
+            img_addr = os.path.join(os.path.abspath('.'), "media/" + str(artwork.image))
+            thumb_addr = os.path.join(os.path.abspath('.'), "media/" + str(artwork.thumbnail))
+            os.remove(img_addr)
+            os.remove(thumb_addr)
+            artwork.delete()  # delete the record in db
     return redirect('/user/profile/')
 
 
@@ -520,4 +557,4 @@ def lent_artwork(request):
                     images.append([record.artwork_booked.name, record.artwork_booked.image.url, True])
                 else:
                     images.append([record.artwork_booked.name, record.artwork_booked.image.url])
-    return render(request, 'user/profile.html', {"lent": True,  "images": images})
+    return render(request, 'user/profile.html', {"lent": True, "images": images})
