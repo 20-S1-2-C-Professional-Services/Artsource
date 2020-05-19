@@ -9,6 +9,7 @@ from artworkpage.models import Artwork
 from artworkpage.models import TagsNames
 from django.template import RequestContext
 
+
 # Create your views here.
 def index(request):
     artworks = Artwork.objects.all()
@@ -29,22 +30,36 @@ def booking_detail(request, pk):
     artid = Artwork.objects.get(id=pk)
     return render(request, './booking/bookart.html', {'artid': artid})
 
+
 def search(request):
     art_list = Artwork.objects.all()
+    name_list =[]
+    for i in art_list:
+        name = ""
+        names = i.artists.all()
+        for n in names:
+            name += n.artist_names + " "
+        name_list.append(name)
+
     if request.method == 'GET':
-        return render(request, 'search.html', {'tt': art_list})
+        return render(request, 'search.html', {'tt': art_list, 'dd': list(reversed(name_list))})
     elif request.method == 'POST':
         s_target = request.POST.get('sss')
         res = []
+        res2 = []
         for i in Artwork.objects.all():
             a = i.name
             b = i.description
             c = i.tags
-            if a.__contains__(s_target) or b.__contains__(s_target) or c.__contains__(s_target):
+            d = ""
+            names = i.artists.all()
+            for n in names:
+                d += n.artist_names + " "
+
+            if a.__contains__(s_target) or b.__contains__(s_target) or c.__contains__(s_target) or d.__contains__(s_target):
                 res.append(i)
-        images = []
-        for i in res:
-            images.append(i.image)
-        return render(request, 'global_search.html', {'tt': res, 'images': images})
+                res2.append(d)
+
+        return render(request, 'global_search.html', {'tt': res,'dd': list(reversed(res2))})
     else:
         return redirect('/search.html/')

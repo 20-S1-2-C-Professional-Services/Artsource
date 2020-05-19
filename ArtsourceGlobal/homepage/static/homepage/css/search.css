@@ -102,9 +102,6 @@ body {
 }
 .placeholder img {
   display: inline-block;
-  width: 30%;
-  height: 30%;
-  filter: blur(10px);
   border-radius: 50%;
 }
 

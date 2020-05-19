@@ -65,8 +65,7 @@
 
             <div class="row placeholders">
                 <div class="col-xs-6 col-sm-3 placeholder">
-                    <img src="/media/extra/1.jpg" width="200" height="200" class="img-responsive"
-                         alt="Generic placeholder thumbnail">
+                    <img src="/media/extra/1.jpg" width="200" height="200" class="img-responsive" alt="">
                     <h4>Art</h4>
                 </div>
                 <div class="col-xs-6 col-sm-3 placeholder">
@@ -86,17 +85,19 @@
                 </div>
             </div>
 
-            <h2 class="sub-header"><span style="color: #5cb85c">The Details of Artwork on-site</span></h2>
+            <h2 class="sub-header"><span style="color: #5cb85c">Details of artwork you searched for</span></h2>
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                     <tr>
                         <th>index</th>
                         <th>Name</th>
+                        <th>Artists</th>
                         <th>Tags</th>
                         <th>Thumbnail</th>
                         <th>Height/cm</th>
-                        <th>Length</th>
+                        <th>Length/cm</th>
+                        <th>Width/cm</th>
                         <th>Price</th>
                         <th>Description</th>
                     </tr>
@@ -106,15 +107,16 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td>{{ i.name }}</td>
+                            <td>{{dd.pop}}</td>
                             <td>{{ i.tags }}</td>
-                            <td><img src="/media/{{ i.thumbnail}}"><br/></td>
+                            <td><img src="/media/{{ i.thumbnail}}" width="150" height="150"><br/></td>
                             <td>{{ i.height }}</td>
                             <td>{{ i.length }}</td>
+                            <td>{{ i.width }}</td>
                             <td>{{ i.price }}</td>
                             <td>{{ i.description }}</td>
                         </tr>
                     {% endfor %}
-                    </tbody>
                 </table>
             </div>
         </div>
