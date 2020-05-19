@@ -1,110 +1,25 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta content="IE=edge" http-equiv="X-UA-Compatible">
-    <meta content="width=device-width,initial-scale=1" name="viewport">
-    <meta content="Gallary" name="gallary">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="{% static 'homepage/img/ASG_logo.png'%}">
-
-
     <title>Gallery</title>
-
-    <!-- Bootstrap core CSS -->
-
-    <link href={% static 'gallery/vendor/bootstrap/css/bootstrap.min.css' %} rel="stylesheet">
-    <!-- Custom fonts for this template -->
-    <link href={% static 'gallery/vendor/fontawesome-free/css/all.min.css' %} rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-
-    <link rel="stylesheet" type="text/css" href={% static 'gallery/css/demo.css' %} />
-    <link rel="stylesheet" type="text/css" href={% static 'gallery/css/main.css' %} />
-    <link rel="stylesheet" type="text/css" href={% static 'gallery/css/owl.carousel.css' %} />
-
-
-
-    <!-- Custom styles for this template -->
-    <link href={% static 'gallery/css/grayscale.min.css' %} rel="stylesheet">
-    <link href={% static 'gallery/css/style.css' %} rel="stylesheet">
-
-    <!-- Gallary template -->
-    <link href={% static 'gallery/main.82cfd66e.css' %} rel="stylesheet">
-
-    <link href={% static 'gallery/css/icons.css' %} rel="stylesheet">
-    <link href={% static 'gallery/css/normalize.css' %} rel="stylesheet">
-
-
 </head>
+<body>
 
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Gallery{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <link rel="stylesheet" href="{% static 'css/upload_artwork.css' %}">
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/artwork_add.js' %}"></script>
+{% endblock %}
 
-
-
+{% block content %}
 <body id="page-top">
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top"><img class="responsive-header-image" height="auto" width ="80%" src= {% static 'homepage/img/ASG_logo.png'%} alt=""></a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-            <form class="form-inline" style="height:50%">
-                <input class="form-control" type="search" placeholder="Search" id="search-input">
-            </form>
-        </div>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-5">
-                <li class="nav-item active" id = "text-nav-opt">
-                    <a class="nav-link js-scroll-trigger" href="/">Gallery</a>
-                </li>
-                <li class="nav-item" id = "text-nav-opt">
-                    <a class="nav-link js-scroll-trigger" href="/homepage">Find Art<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item" id = "text-nav-opt">
-                    <a class="nav-link js-scroll-trigger" href="/#projects">About us</a>
-                </li>
-                <li class="nav-item" id = "text-nav-opt">
-                    <a class="nav-link js-scroll-trigger" href="/email">Support</a>
-                </li>
-                {% if request.session.is_login %}
-                <li class="">
-                    <div class="" style="color: orangered; padding: 2.6rem 1.5rem;">
-                        Hi ! {{ user.username }}
-
-                    </div>
-
-                </li>
-                <li class="">
-
-                    <a href="/user/logout" class="logout" style="color: #002752; padding: 2.6rem 1.5rem; text-decoration: underline">logout</a>
-
-                </li>
-
-                <li class="">
-
-                    <a href="../user/profile" style="color: #002752; padding: 2.6rem 1.5rem; text-decoration: underline">Dashboard</a>
-
-                </li>
-                {% else %}
-                <a href="/user/login" id ="header-signin" class="nav-link js-scroll-trigger"><button class="button-signin"> LOG IN </button></a>
-                </li>
-
-                <li class="">
-                    <a href="/user/register" id ="header-signin" class="nav-link js-scroll-trigger"><button class="button-signup"> REGISTER </button></a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
-
-
-
 <div class="row no-gutters" style="width:65%; margin:auto">
           {% for a in display_artwork %}
             <div class="col-md-6">
@@ -162,22 +77,6 @@
             navActivePage();
         });
     </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     <script src={% static 'gallery/js/mo.min.js' %}></script>
@@ -315,13 +214,6 @@
         }
     </script>
 
-
-
-
-
-
-
-
     <!-- Bootstrap core JavaScript -->
     <script src={% static 'gallery/vendor/jquery/jquery.min.js' %}></script>
     <script src={% static 'gallery/vendor/bootstrap/js/bootstrap.bundle.min.js' %}></script>
@@ -341,5 +233,5 @@
 
 
 </body>
-
+{%endblock%}
 </html>
