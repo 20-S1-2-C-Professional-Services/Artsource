@@ -31,6 +31,7 @@ def booking_detail(request, pk):
     return render(request, './booking/bookart.html', {'artid': artid})
 
 
+
 def search(request):
     art_list = Artwork.objects.all()
     name_list = []
