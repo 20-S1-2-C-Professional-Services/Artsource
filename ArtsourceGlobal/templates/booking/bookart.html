@@ -22,12 +22,16 @@
 <!--    <br>-->
 <!--    <h4><span style="font-weight:bold;">Total Price:</span>  {{total_price_booking}}</h4>-->
 <!--    <br>-->
+    <h4> <span style="font-weight:bold;">Total Number of Booking Days:</span> {{delta}} days </h4>
+    <br>
+    <h4><span style="font-weight:bold;">Total Price:</span>  {{total_price_booking}}</h4>
+    <br>
     <form method = "post" >
         {% csrf_token %}
         {{form.as_p}}
         <button type="submit" class="btn btn-default btn-lg" style="background-color: orangered">Submit</button>
     </form>
-    <h2> Payment System To be included later</h2>
+    <h3> Payment System To be included later</h3>
     </div> 
     
 {% endblock %}
