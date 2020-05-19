@@ -1,9 +1,9 @@
 
 function TagChoice()
 {
-    var taginput=document.getElementById('tagsInput');
-    var tags=document.getElementById('tags');
-    if(taginput.value.length>0)
+    var taginput = document.getElementById('tagsInput');
+    var tags = document.getElementById('tags');
+    if(taginput.value.length > 0)
     {
         cleanedInput = cleanInputValue(taginput.value);
         if(tags.value.length>0)

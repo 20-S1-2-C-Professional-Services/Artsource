@@ -418,10 +418,15 @@ def upload_artwork(request):
     if request.method == 'POST':
         upload_type = request.POST.get('upload_type')
         name = request.POST.get('name')
+        if name == "":
+            name = "Untitled"
+        # Names should not have to be unique, this should be fixed later
         if upload_type == 'upload':
             if Artwork.objects.filter(name=name):
                 message = "This name already exist!"
                 return render(request, "user/upload_artwork.html", {'message': message, 'tags': tags})
+            elif request.POST.get('image') == '' or request.POST.get('thumbnail') == '':
+                return render(request, "user/upload_artwork.html", {'message': "Please upload an image and thumbnail!", 'tags': tags})
             else:
                 artwork = Artwork()
         else:
@@ -456,6 +461,7 @@ def upload_artwork(request):
                                           thumb_io.getbuffer().nbytes, None)
         artwork.thumbnail = thumb_file
         artwork.user = user
+
         # save the price
         artwork.price = request.POST.get('price')
         # the code to get and store the tags
