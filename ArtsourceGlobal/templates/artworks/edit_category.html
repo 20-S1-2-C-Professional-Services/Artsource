@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<title>Create Category</title>
+</head>
+<body>
+
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}Create Category{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/image.css' %}">
+{% endblock %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/imglist.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/upload_artwork.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/artwork_add.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/cropper.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-cropper.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="container" >
+    <div >
+        <div class="profile-tabs">
+           <ul class="nav nav-pills nav-pills-icons justify-content-center" role="tablist">
+             <li class="nav-item">
+                 <a class="nav-link" href="/user/profile" role="tab" data-toggle="tab">
+                   <i class="material-icons"></i>
+                   Manage orders
+                 </a>
+             </li>
+               <li class="nav-item">
+             <a class="nav-link" href="/artworkpage/view_category" role="tab" data-toggle="tab">
+               <i class="material-icons"></i>
+               View categories
+             </a>
+             </li>
+            <li class="nav-item">
+             <a class="nav-link" href="/artworkpage/create_category" role="tab" data-toggle="tab">
+               <i class="material-icons"></i>
+               Create categories
+             </a>
+            </li>
+           </ul>
+         </div>
+    </div>
+</div>
+<div class="imgLayoutPanel">
+    {% if message %}
+        <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
+    <li class="imgButtionList">
+        <button id="FourButton" title="Four images each row" onclick="FourImagesOneLine()">
+            4/row
+        </button>
+        <button id="ThreeButton" title="Three images each row" onclick="ThreeImagesOneLine()">
+            3/row
+        </button>
+        <button id="TwoButton" title="Two images each row" onclick="TwoImagesOneLine()">
+            2/row
+        </button>
+    </li>
+</div>
+
+<div class="container" >
+    <div id="block-position">
+        <form  action="/artworkpage/change_category/" method="post" enctype="multipart/form-data">
+            {% if message %}
+                <div class="alert alert-warning">{{ message }}</div>
+            {% endif %}
+            {% csrf_token %}
+            <h2 class="text-center">Change the new category here!</h2>
+            <div class="form-register">Input the name of this category
+                <input type="text" name="title" value="{{category.title}}" maxlength="128" style="width: 400px">
+            </div>
+
+             <div class="form-register">Upload the image
+                <input type="file" accept="image/*" name="banner" id="image" src="{{category.banner.url}}">
+            </div>
+
+            <div class="form-register" style="margin-bottom: 20px">
+                <h6>The artworks you chose, max length: 512 characters</h6>
+            <textarea name="artwork_list" id="artists" maxlength="512" style="width: 400px; height: 24px; font-size:12px; margin-bottom: 3%">{{category.artwork_name_list}}</textarea>
+                <h6>Choose or enter artworks here!</h6>
+            <input type="text" id="artistsInput" maxlength="128"  list="artistsChoices" style="margin-bottom: 20px" >
+            <button type="button" onclick="ArtistChoice()">enter</button>
+            <datalist id="artistsChoices">
+                {% for artwork in name_list %}
+                <option type="button" value="{{ artwork }}"></option>
+                {% endfor %}
+            </datalist>
+            </div>
+
+            <div class="form-register" style="margin-bottom: 20px">
+                <h6>The tags you chose, max length: 512 characters</h6>
+            <textarea name="tags_list" id="tags" maxlength="512" style="width: 400px; height: 24px; font-size:12px; margin-bottom: 3%">{{category.tags_list}}</textarea>
+                <h6>Choose or enter tags here!</h6>
+            <input type="text" id="tagsInput" maxlength="128"  list="tagChoices" style="margin-bottom: 20px" >
+            <button type="button" onclick="TagChoice()">enter</button>
+            <datalist id="tagChoices">
+                {% for tag in tags_list %}
+                <option type="button" value="{{ tag }}"></option>
+                {% endfor %}
+            </datalist>
+            <div class="form-register">
+            <button type="reset" class="btn btn-default pull-left">reset</button>
+            <button type="submit" id="submit_button" class="btn btn-default pull-right">submit</button>
+            </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
+</body>
+</html>
