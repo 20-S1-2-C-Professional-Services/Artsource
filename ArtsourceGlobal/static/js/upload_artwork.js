@@ -98,6 +98,8 @@ function drawImage(){
         $('#thumbnail').val(canvas2.toDataURL("image/jpeg"));
         $('#croppedImage').attr('src',canvas2.toDataURL("image/jpeg"));
     }
+    //Mark the image as uploaded.
+    document.getElementById("croppedImage").setAttribute("doesExist", "true");
 }
 
 function AutoSize(Img, maxWidth, maxHeight) {

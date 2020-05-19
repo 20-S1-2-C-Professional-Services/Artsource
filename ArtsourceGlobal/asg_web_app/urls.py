@@ -34,7 +34,7 @@ urlpatterns = [
     path('user_profile/', include('user_profile.urls')),
     # path('accounts/', include('django.contrib.auth.urls')),
     # path('homeafterlogin/', views.index, name='homeAfterLogin'),
-    path('', include('homepage.urls')),
+    path('', include('gallery.urls')),
     path('homepage/', include('homepage.urls')),
     path('booking/', include('booking.urls')),
     path('', include(('booking.urls', 'booking'), namespace='booking')),

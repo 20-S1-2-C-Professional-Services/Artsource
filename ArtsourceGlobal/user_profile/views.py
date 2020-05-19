@@ -74,5 +74,4 @@ def upload_artwork(request):
             artwork_image = UploadArtForm(request.FILES['artwork_image'])
             return redirect('view_profile')
             # args = {'form':form, 'title':title, 'art_description':art_description, 'height':height, 'width':width,'price_per_day':price_per_day,'artwork_image':artwork_image}
-            form = UploadArtForm()
         return render(request, 'user_profile/upload_artwork.html', {'form': form})
