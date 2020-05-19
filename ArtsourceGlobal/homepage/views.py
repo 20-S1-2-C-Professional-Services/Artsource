@@ -13,7 +13,7 @@ from django.template import RequestContext
 # Create your views here.
 def index(request):
     artworks = Artwork.objects.all()
-    tags = TagsNames.objects.values_list("tag_names")
+    tags = TagsNames.objects.values_list("tag_names", flat=True)
     return render(request, 'homepage/index.html', {'artworks': artworks, 'tags': tags})
 
 
@@ -33,7 +33,7 @@ def booking_detail(request, pk):
 
 def search(request):
     art_list = Artwork.objects.all()
-    name_list =[]
+    name_list = []
     for i in art_list:
         name = ""
         names = i.artists.all()
@@ -42,7 +42,7 @@ def search(request):
         name_list.append(name)
 
     if request.method == 'GET':
-        return render(request, 'search.html', {'tt': art_list, 'dd': list(reversed(name_list))})
+        return render(request, 'artworks/search.html', {'tt': art_list, 'dd': list(reversed(name_list))})
     elif request.method == 'POST':
         s_target = request.POST.get('sss')
         res = []
@@ -56,10 +56,11 @@ def search(request):
             for n in names:
                 d += n.artist_names + " "
 
-            if a.__contains__(s_target) or b.__contains__(s_target) or c.__contains__(s_target) or d.__contains__(s_target):
+            if a.__contains__(s_target) or b.__contains__(s_target) or c.__contains__(s_target) or d.__contains__(
+                    s_target):
                 res.append(i)
                 res2.append(d)
 
-        return render(request, 'global_search.html', {'tt': res,'dd': list(reversed(res2))})
+        return render(request, 'artworks/global_search.html', {'tt': res, 'dd': list(reversed(res2))})
     else:
         return redirect('/search.html/')

@@ -20,6 +20,7 @@
 
 {% block content %}
 <div class="container" >
+
     <div id="block-position">
 
         <form  class="form-register" action="/artworkpage/search/" method="post" enctype="multipart/form-data">
@@ -37,9 +38,11 @@
             <input type="text" id="tagsInput" maxlength="128"  list="tagChoices" style="margin-bottom: 20px" >
             <button type="button" onclick="TagChoice()">enter</button>
             <datalist id="tagChoices">
+                {%if tags%}
                 {% for tag in tags %}
                 <option type="button" value="{{ tag }}"></option>
                 {% endfor %}
+                {% endif %}
             </datalist>
             <div class="form-entry">
             <button type="reset" class="btn btn-default pull-left">reset</button>
@@ -49,6 +52,7 @@
         </form>
     </div>
 
+    {% if request.session.is_login %}
      <div style="margin-top: 100px; margin-bottom: 100px">
 
         <form  class="form-register" action="/artworkpage/recommend/" method="post" enctype="multipart/form-data">
@@ -90,7 +94,7 @@
             </div>
         </form>
     </div>
-
+    {% endif %}
 </div>
 {% endblock %}
 </body>

@@ -12,10 +12,15 @@ from django.contrib import auth
 import io
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
+tags = []
+
 
 # Create your views here.
 def index(request):
-    return render(request, 'artworkpage/index.html')
+    global tags
+    if not len(tags):
+        tags = TagsNames.objects.values_list("tag_names", flat=True)
+    return render(request, 'homepage/index.html', {'tags': tags})
 
 
 # TODO: add the tag search functions here
@@ -23,6 +28,9 @@ def search(request):
     images = []
     art_list = []
     name_list = []
+    global tags
+    if not len(tags):
+        tags = TagsNames.objects.values_list("tag_names", flat=True)
     current_username = request.session.get('user_name')
     if request.method == 'POST':
         # the code to get and store the tags
@@ -30,7 +38,7 @@ def search(request):
 
         if len(tags_input) == 0:
             message = 'please enter the tags or words you want!'
-            return render(request, 'user/index.html', {'message': message})
+            return render(request, 'user/index.html', {'message': message, 'tags': tags})
         # at the beginning search was implemented by extra, however, it uses different command for different db
         # Thus us Q instead
         q1 = Q()
@@ -41,8 +49,7 @@ def search(request):
         search_result = Artwork.objects.filter(q1)
         if len(search_result) == 0:
             message = 'Nothing found, try other tags'
-            return render(request, 'user/index.html', {'message': message})
-
+            return render(request, 'user/index.html', {'message': message, 'tags': tags})
 
         for i in search_result:
             # if i.artwork_user != current_username and not i.booked:  # ensure the owner will not searched their own artworks
@@ -59,7 +66,53 @@ def search(request):
             name_list.append(name)
 
         # store the searched results into this list, only store the url
-    return render(request, 'search.html', {'tt': art_list, 'dd': list(reversed(name_list))})
+    return render(request, 'artworks/search.html', {'tt': art_list, 'dd': list(reversed(name_list))})
+    # return render(request, "artworks/searchresults.html", {'images': images})
+
+
+# TODO: add the tag search functions here
+def simplesearch(request):
+    images = []
+    art_list = []
+    name_list = []
+    current_username = request.session.get('user_name')
+    if request.method == 'POST':
+        # the code to get and store the tags
+        search_input = request.POST.get('searchinput')  # this is the input string
+
+        if len(search_input) == 0:
+            message = 'please enter the tags or words you want!'
+            return render(request, 'artworks/search.html', {'message': message})
+        # at the beginning search was implemented by extra, however, it uses different command for different db
+        # Thus us Q instead
+        q1 = Q()
+        q1.connector = 'OR'
+        for i in search_input.split(" "):
+            q1.children.append(('tags__icontains', i))  # search the tags column
+            q1.children.append(('name__icontains', i))  # search the name
+            q1.children.append(('description__icontains', i))  # search the description
+            q1.children.append(('artists_string__icontains', i))  # search the artist name string
+        search_result = Artwork.objects.filter(q1)
+        if len(search_result) == 0:
+            message = 'Nothing found, try other tags'
+            return render(request, 'artworks/search.html', {'message': message})
+
+        for i in search_result:
+            # if i.artwork_user != current_username and not i.booked:  # ensure the owner will not searched their own artworks
+            if i.booked or i.user == current_username:
+                continue
+            art_list.append(i)
+            images.append([i.name, i.image.url])
+
+        for i in art_list:
+            name = ""
+            names = i.artists.all()
+            for n in names:
+                name += n.artist_names + " "
+            name_list.append(name)
+
+        # store the searched results into this list, only store the url
+    return render(request, 'artworks/search.html', {'tt': art_list, 'dd': list(reversed(name_list))})
     # return render(request, "artworks/searchresults.html", {'images': images})
 
 
@@ -124,7 +177,7 @@ def create_category(request):
         all_images = Artwork.objects.all()
         images = []
         name_list = []
-        tags_list = TagsNames.objects.values_list('tag_names')
+        tags_list = TagsNames.objects.values_list('tag_names', flat=True)
         for i in all_images:
             images.append([i.name, i.thumbnail.url])
             name_list.append(i.name)

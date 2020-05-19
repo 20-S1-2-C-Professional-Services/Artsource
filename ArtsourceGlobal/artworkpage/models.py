@@ -28,6 +28,7 @@ class Artwork(models.Model):
     tags = models.CharField(max_length=128, default='')
     # add() and remove() for this manytomany field, clear() is remove all
     artists = models.ManyToManyField(ArtistNames, related_name='created_artwork')
+    artists_string = models.CharField(max_length=512,default='')
     description = models.CharField(max_length=512, default='')
     height = models.FloatField(default=0)
     width = models.FloatField(default=0)

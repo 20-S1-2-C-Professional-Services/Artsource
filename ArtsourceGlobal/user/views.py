@@ -20,6 +20,10 @@ import os
 from django.contrib import auth
 from django.contrib.auth.models import User as AdminUser
 
+# TODO: this tag list should be empty, I set values for test
+tags = ['dog', 'peppers', 'mandm', 'mountain', 'civilization']
+artists_list = []
+
 
 class ActiveUserView(View):
     def get(self, request, active_code):
@@ -142,7 +146,10 @@ def index(request):
         request.session['is_login'] = True
         request.session['user_id'] = user_id
         request.session['user_name'] = 'Administrator'
-    return render(request, 'user/index.html')
+    global tags
+    if not len(tags):
+        tags = TagsNames.objects.values_list("tag_names", flat=True)
+    return render(request, 'user/index.html', {'tags': tags})
 
 
 def register(request):
@@ -395,11 +402,6 @@ def register_middle(request):
     return render(request, "user/register_middle.html")
 
 
-# this tag list should be empty, I set values for test
-tags = ['dog', 'peppers', 'mandm', 'mountain', 'civilization']
-artists_list = []
-
-
 def upload_artwork(request):
     global tags
     if not len(tags):
@@ -468,9 +470,9 @@ def upload_artwork(request):
                 new_tag = TagsNames()
                 new_tag.tag_names = i
                 new_tag.save()
-        artwork.save()
-
         artists_input = request.POST.get('artists')
+        artwork.artists_string = artists_input
+        artwork.save()
         for i in artists_input.split(" "):
             artist_info = i.split(",")
             if len(artist_info) > 1:

@@ -10,6 +10,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('search/', views.search),
+    path('simplesearch/', views.simplesearch),
     path('recommend/', views.recommend),
     path('view_category/', views.view_category),
     path('create_category/', views.create_category),
