@@ -8,7 +8,25 @@
 Soon to be rebranded as Remarkable Art, Artsource Global is a platform designed to help local artists connect with those who would be interested in renting their art- hopefully allowing them to achieve a more stable income and exposure in their local communities. In its current form the business exists through it's owner and our client (Jill) manually connecting prospective renters with artists, however in order for the project to scale and become more accessible it will require a strong web presence. We have inhereted a base website from the previous techlauncher team, however the site has very few features and has several major flaws in the structure of its implementation; there is a lot of work for us to do before it's ready to use!
 
 # **Our minimum viable product**
-Todo
+*Design:*
+- Gallery page redesign which adaptively shows any number of artwork (Using Google Arts and Culture for inspiration)
+- Artwork/author page displays relevant author information, has minimal whitespace regardless of artwork dimensions and displays some of the artist’s other work.
+- About us/the introduction page is similar, but with no broken parts and briefly explains Remarkable Art. and what it’s about. (Jill will have final input on the content of this page)
+*Technical:*
+- Sign in/sign-up works correctly
+- Allow users to modify their profiles (bio, listings they’ve created)
+- Allow bookings to be made by users (without payment)
+- Tagging of artwork/authors implemented
+- Search feature implemented
+
+*Documentation:*
+- Technical plan (Specific details about how we plan to produce the above deliverables)
+- Risk assessment metrics/specifications 
+
+*Our highest priority tasks decided by Jill and her tech mentor:*
+1) Artist sign up
+2) Look at the front end interface for selection. 
+
 
 # **Directory**
 
