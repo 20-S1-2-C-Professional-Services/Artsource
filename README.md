@@ -12,6 +12,7 @@ Soon to be rebranded as Remarkable Art, Artsource Global is a platform designed 
 - Gallery page redesign which adaptively shows any number of artwork (Using Google Arts and Culture for inspiration)
 - Artwork/author page displays relevant author information, has minimal whitespace regardless of artwork dimensions and displays some of the artist’s other work.
 - About us/the introduction page is similar, but with no broken parts and briefly explains Remarkable Art. and what it’s about. (Jill will have final input on the content of this page)
+
 *Technical:*
 - Sign in/sign-up works correctly
 - Allow users to modify their profiles (bio, listings they’ve created)
