@@ -1,3 +1,5 @@
+{% load static %}
+<!DOCTYPE html>
 <html lang="en"><head>
 	<title>Details of {{artid.name}}</title>
 	<meta charset="UTF-8">
@@ -10,18 +12,18 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
 
 	<!-- Stylesheets -->
-	<link href="/static/homepage/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="/static/css/bootstrap.min.css/">
+	<link href={% static 'homepage/vendor/fontawesome-free/css/all.min.css'%} rel="stylesheet">
+	<link rel="stylesheet" href={% static "css/bootstrap.min.css"%}/>
 
-	<link rel="stylesheet" href="/static/css/flaticon.css/">
-	<link rel="stylesheet" href="/static/css/animate.css/">
-	<link rel="stylesheet" href="/static/css/owl.carousel.css/">
-	<link rel="stylesheet" href="/static/css/style.css/">
-  <link href="/static/css/grayscale.min.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="/static/css/normalize.css">
-	<link rel="stylesheet" type="text/css" href="/static/css/demo.css">
-	<link rel="stylesheet" type="text/css" href="/static/css/set1.css">
-	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+	<link rel="stylesheet" href={% static "css/flaticon.css"%}/>
+	<link rel="stylesheet" href={% static "css/animate.css"%}/>
+	<link rel="stylesheet" href={% static "css/owl.carousel.css"%}/>
+	<link rel="stylesheet" href={% static "css/style.css"%}/>
+  <link href={% static 'css/grayscale.min.css'%} rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href={% static 'css/normalize.css'%} />
+	<link rel="stylesheet" type="text/css" href={% static 'css/demo.css'%} />
+	<link rel="stylesheet" type="text/css" href={% static 'css/set1.css'%} />
+	<link rel="stylesheet" type="text/css" href={% static 'css/main.css'%} />
 
 
 
@@ -31,13 +33,13 @@
 	<![endif]-->
 
 </head>
-<body id="page-top" data-gr-c-s-loaded="true">
+<body id="page-top">
 
 
 
   <!-- Navigation -->
    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-    <a class="navbar-brand js-scroll-trigger" href="#page-top"><img class="responsive-header-image" height="auto" width="80%" src="/static/homepage/img/ASG_logo.png" alt=""></a>
+    <a class="navbar-brand js-scroll-trigger" href="#page-top"><img class="responsive-header-image" height="auto" width ="80%" src= {% static 'homepage/img/ASG_logo.png'%} alt=""></a>
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -61,10 +63,10 @@
       <li class="nav-item" id="text-nav-opt">
         <a class="nav-link js-scroll-trigger" href="/email">Support</a>
       </li>
-
+{% if request.session.is_login %}
       <li class="">
          <div class="" style="color: orangered; padding: 2.6rem 1.5rem;">
-                  Hi !
+                  Hi ! {{ user.username }}
 
          </div>
 
@@ -80,6 +82,14 @@
                 <a href="../user_profile/userDash" style="color: #002752; padding: 2.6rem 1.5rem; text-decoration: underline">Dashboard</a>
 
             </li>
+		{% else %}
+                  <a href="/user/login" id ="header-signin" class="nav-link js-scroll-trigger"><button class="button-signin"> LOG IN </button></a>
+              </li>
+
+              <li class="">
+             <a href="/user/register" id ="header-signin" class="nav-link js-scroll-trigger"><button class="button-signup"> REGISTER </button></a>
+              </li>
+        {% endif %}
 
     </ul>
   </div>
@@ -514,12 +524,12 @@
 
 
 	<!--====== Javascripts & Jquery ======-->
-	<script src="/static/js/jquery-3.2.1.min.js"></script>
-	<script src="/static/js/bootstrap.min.js"></script>
-	<script src="/static/js/owl.carousel.min.js"></script>
-	<script src="/static/js/mixitup.min.js"></script>
-	<script src="/static/js/circle-progress.min.js"></script>
-	<script src="/static/js/main.js"></script>
+	<script src={% static "js/jquery-3.2.1.min.js"%}></script>
+	<script src={% static "js/bootstrap.min.js"%}></script>
+	<script src={% static "js/owl.carousel.min.js"%}></script>
+	<script src={% static "js/mixitup.min.js"%}></script>
+	<script src={% static "js/circle-progress.min.js"%}></script>
+	<script src={% static "js/main.js"%}></script>
 
 
 </body></html>
