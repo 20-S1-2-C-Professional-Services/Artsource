@@ -5,10 +5,10 @@
 <div align=center><img width="150" height="150" src="/ASG_logo.png"/></div>
 
 # **Overview**
-The Artsource Global enable people to rent art directly from local artists. Most art rental companies buy artwork, rent it out and keep all the money. A website has been built by a previous team. The layout, interaction logic, and related 
-functions, interfaces of the page are still very crude. 
-The purpose of this team is to build a direct platform between artists and customers, who are eager to rent or buy artworks, thereby revolutionizing artists' existing channel of income stream and the market general rule. To be more precise, Our task is to improve it, find and correct potential bugs, and enrich the usability to promote the user experience that make it professional.
+Soon to be rebranded as Remarkable Art, Artsource Global is a platform designed to help local artists connect with those who would be interested in renting their art- hopefully allowing them to achieve a more stable income and exposure in their local communities. In its current form the business exists through it's owner and our client (Jill) manually connecting prospective renters with artists, however in order for the project to scale and become more accessible it will require a strong web presence. We have inhereted a base website from the previous techlauncher team, however the site has very few features and has several major flaws in the structure of its implementation; there is a lot of work for us to do before it's ready to use!
 
+# **Our minimum viable product**
+Todo
 
 # **Directory**
 
@@ -26,9 +26,9 @@ The purpose of this team is to build a direct platform between artists and custo
 
 Team Members:
 *  Joshua Trevor: Spokesperson, Web Designer, Project Manager, Developer
-*  Rui Zhang: Spokesperson, Risk Manager, Developer
-*  Xiaoxiang Kong: Web Designer, UX analyst & designer
-*  Yu Qiao: Tag&Search system Developer
+*  Rui Zhang: Spokesperson, Risk Manager, Search Developer
+*  Xiaoxiang Kong: Web designer
+*  Yu Qiao: Documentation
 *  Zongyuan Sui: Verification function developer, repository maintainer
 
 # **Project Stakeholders**
