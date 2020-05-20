@@ -103,7 +103,7 @@
             <input type="text" id="artistsInput" maxlength="128"  list="artistsChoices" style="margin-bottom: 20px" >
             <button type="button" onclick="ArtistChoice()">enter</button>
             <datalist id="artistsChoices">
-                {% for artwork in name_list %}
+                {% for artwork in id_and_name_list %}
                 <option type="button" value="{{ artwork }}"></option>
                 {% endfor %}
             </datalist>

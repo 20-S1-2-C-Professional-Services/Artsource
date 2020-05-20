@@ -164,7 +164,9 @@ def create_category(request):
                 category.banner = image_file
                 category.save()
                 for i in artwork_list.split(" "):
-                    chose_artwork = Artwork.objects.get(name=i)  # the needed object
+                    if len(i) == 0:
+                        continue
+                    chose_artwork = Artwork.objects.get(id=i)  # the needed object
                     category.artwork_list.add(chose_artwork)
                 return redirect('/artworkpage/view_category/')
             else:
@@ -181,6 +183,12 @@ def create_category(request):
         for i in all_images:
             images.append([i.name, i.thumbnail.url])
             name_list.append(i.name)
+
+        id_list = Artwork.objects.values_list('id', flat = True)
+        id_and_name_list = []
+        for art_id in id_list:
+            corresp_name = Artwork.objects.get(id=art_id)
+            id_and_name_list.append("{}-({})".format(art_id, corresp_name))
         return render(request, 'artworks/create_category.html', locals())
 
 
@@ -204,7 +212,9 @@ def change_category(request):
             category.save()
             category.artwork_list.clear()  # this is much faster than compare one by one
             for i in artwork_list.split(" "):
-                chose_artwork = Artwork.objects.get(name=i)  # the needed object
+                if len(i) == 0:
+                        continue
+                chose_artwork = Artwork.objects.get(id=i)  # the needed object
                 category.artwork_list.add(chose_artwork)
             return redirect('/artworkpage/view_category/')
     return redirect('/artworkpage/view_category/')
@@ -216,7 +226,14 @@ def edit_category(request):
     name_list = []
     tags_list = TagsNames.objects.values_list('tag_names', flat=True)
     name_list = Artwork.objects.values_list('name', flat=True)
+    id_list = Artwork.objects.values_list('id', flat = True)
+    print("ID LIST LENGTH")
+    print(id_list)
+    id_and_name_list = []
 
+    for art_id in id_list:
+        corresp_name = Artwork.objects.get(id=art_id)
+        id_and_name_list.append("{}-({})".format(art_id, corresp_name))
     return render(request, 'artworks/edit_category.html', locals())
 
 
