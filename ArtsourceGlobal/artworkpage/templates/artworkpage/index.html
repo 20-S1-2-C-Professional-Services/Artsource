@@ -1,8 +1,5 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<title>HALO - Photography Portfolio Template</title>
+<html lang="en"><head>
+	<title>Details of {{artid.name}}</title>
 	<meta charset="UTF-8">
 	<meta name="description" content="HALO photography portfolio template">
 	<meta name="keywords" content="photography, portfolio, onepage, creative, html">
@@ -13,18 +10,18 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
 
 	<!-- Stylesheets -->
-	<link href={% static 'homepage/vendor/fontawesome-free/css/all.min.css'%} rel="stylesheet">
-	<link rel="stylesheet" href={% static "css/bootstrap.min.css"%}/>
+	<link href="/static/homepage/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css/">
 
-	<link rel="stylesheet" href={% static "css/flaticon.css"%}/>
-	<link rel="stylesheet" href={% static "css/animate.css"%}/>
-	<link rel="stylesheet" href={% static "css/owl.carousel.css"%}/>
-	<link rel="stylesheet" href={% static "css/style.css"%}/>
-  <link href={% static 'css/grayscale.min.css'%} rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href={% static 'css/normalize.css'%} />
-	<link rel="stylesheet" type="text/css" href={% static 'css/demo.css'%} />
-	<link rel="stylesheet" type="text/css" href={% static 'css/set1.css'%} />
-	<link rel="stylesheet" type="text/css" href={% static 'css/main.css'%} />
+	<link rel="stylesheet" href="/static/css/flaticon.css/">
+	<link rel="stylesheet" href="/static/css/animate.css/">
+	<link rel="stylesheet" href="/static/css/owl.carousel.css/">
+	<link rel="stylesheet" href="/static/css/style.css/">
+  <link href="/static/css/grayscale.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/static/css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/demo.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/set1.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
 
 
 
@@ -34,11 +31,13 @@
 	<![endif]-->
 
 </head>
-<body id="page-top">
+<body id="page-top" data-gr-c-s-loaded="true">
+
+
 
   <!-- Navigation -->
    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-    <a class="navbar-brand js-scroll-trigger" href="#page-top"><img class="responsive-header-image" height="auto" width ="80%" src= {% static 'homepage/img/ASG_logo.png'%} alt=""></a>
+    <a class="navbar-brand js-scroll-trigger" href="#page-top"><img class="responsive-header-image" height="auto" width="80%" src="/static/homepage/img/ASG_logo.png" alt=""></a>
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -50,22 +49,22 @@
   </div>
     <div class="collapse navbar-collapse" id="navbarResponsive">
     <ul class="navbar-nav ml-5">
-      <li class="nav-item active" id = "text-nav-opt">
+      <li class="nav-item active" id="text-nav-opt">
         <a class="nav-link js-scroll-trigger" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item" id = "text-nav-opt">
+      <li class="nav-item" id="text-nav-opt">
         <a class="nav-link js-scroll-trigger" href="/#projects">Art</a>
       </li>
-      <li class="nav-item" id = "text-nav-opt">
+      <li class="nav-item" id="text-nav-opt">
         <a class="nav-link js-scroll-trigger" href="/gallery">Gallery</a>
       </li>
-      <li class="nav-item" id = "text-nav-opt">
+      <li class="nav-item" id="text-nav-opt">
         <a class="nav-link js-scroll-trigger" href="/email">Support</a>
       </li>
-        {% if request.session.is_login %}
+
       <li class="">
          <div class="" style="color: orangered; padding: 2.6rem 1.5rem;">
-                  Hi ! {{ user.username }}
+                  Hi !
 
          </div>
 
@@ -81,20 +80,13 @@
                 <a href="../user_profile/userDash" style="color: #002752; padding: 2.6rem 1.5rem; text-decoration: underline">Dashboard</a>
 
             </li>
-       {% else %}
-                  <a href="/user/login" id ="header-signin" class="nav-link js-scroll-trigger"><button class="button-signin"> LOG IN </button></a>
-              </li>
 
-              <li class="">
-             <a href="/user/register" id ="header-signin" class="nav-link js-scroll-trigger"><button class="button-signup"> REGISTER </button></a>
-              </li>
-        {% endif %}
     </ul>
   </div>
 </nav>
   <!--<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
 	<div class="container">
-	  <a class="navbar-brand js-scroll-trigger" href="#page-top"><img class="responsive-header-image" height="auto" width ="60%" src= {% static 'homepage/img/ASG_logo.png'%} alt=""></a>
+	  <a class="navbar-brand js-scroll-trigger" href="#page-top"><img class="responsive-header-image" height="auto" width ="60%" src= /static/homepage/img/ASG_logo.png alt=""></a>
 
 	  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 		Menu
@@ -140,10 +132,10 @@
   </nav> -->
 
 
-<body>
+
 	<!-- Page Preloder -->
-	<div id="preloder">
-		<div class="loader"></div>
+	<div id="preloder" style="display: none;">
+		<div class="loader" style="display: none;"></div>
 	</div>
 
 	<!-- Header section start -->
@@ -171,7 +163,7 @@
 
 
 	<!-- Page top section start -->
-	<!-- <div class="page-top-area set-bg" data-setbg={% static "img/headers-bg/3.jpg"%}>
+	<!-- <div class="page-top-area set-bg" data-setbg=/static/img/headers-bg/3.jpg>
 		<div class="breadcrumb-area">
 			<a href="#">Home</a> / <span>Portfolio</span>
 		</div>
@@ -180,67 +172,189 @@
 
 
 	<!-- Blogs section start -->
-	<section class="single-work-section sp-pad spad">
-		<div class="container-fluid p-0">
+	<div class="single-work-section sp-pad spad">
+		<div class="container-fluid p-0" style="
+    display: flex;
+    flex-wrap: wrap;
+">
 
-            <img  src={{artid.image.url}}>
+            <!--img  src=>-->
+			<div id="artwork">
+			 <img class="artwork-detail" alt="" src={{artid.image.url}}>
+		    </div>
 
-
-			<div class="row">
-				<div class="col-xl-6 offset-xl-6">
+			<div class="row" id="information" style="float: left; margin-left: 0px; margin-right: 0px; height: 512px;">
+    <script>
+        document.getElementById("information").style.height = document.getElementById("artwork").offsetHeight + "px";
+        </script>
+				<div class="col-xl-6 offset-xl-6" style="
+    margin-left: 10%;
+    width: 300px;
+    padding: 0;
+    flex: none;
+    max-width: 100%;
+">
                     <ul class="work-info-list">
-						<li>
-							<span>Title:</span>
-                            <h4>{{artid}}</h4>
-						</li>
-						<li>
-							<span>Likes:</span>
-                            <h4>{{artid.likes}}</h4>
-						</li>
-						<li>
-							<span>Dimensions:</span>
-                            <h4>{{artid.width}} cm x {{artid.height}} cm</h4>
-						</li>
+						<li id="Artist" style="
+    float: left;
+    list-style: none;
+    margin-bottom: 40px;
+    margin-right: 20px;
+    width: min-content;
+">
 
-						<li>
-							<span>Why hesitate!</span>
-							<div class="how-it-works-btn" style="margin-left:75px;">
-								<a href="{% url 'booking_detail' pk=artid.id %}"><button type="button" class="btn btn-default btn-lg"> Book Me Now! </button></a>
-							</div>
-						</li>
+    Artist:
+    </li>
+    <li id="Artist_img" style="
+    /* list-style: none; */
+    width: auto;
+    float: right;
+    margin-bottom: 40px;
+">
 
-					</ul>
+
+
+							<span style="display:inline;float: right">{{artid.artists_string}}</span>
+		<img style="display: inline-block;float:right;width: auto;height: 50px;margin-top: -15;margin-right: 5px;" src="https://www.biography.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cg_face%2Cq_auto:good%2Cw_300/MTU0NjQzOTk4OTQ4OTkyMzQy/ansel-elgort-poses-for-a-portrait-during-the-baby-driver-premiere-2017-sxsw-conference-and-festivals-on-march-11-2017-in-austin-texas-photo-by-matt-winkelmeyer_getty-imagesfor-sxsw-square.jpg">
+        </li>
+
+
+
+						<li style="
+    float: left;
+    list-style: none;
+    margin-bottom: 40px;
+    margin-right: 20px;
+">
+							<script>
+        document.getElementById("Artist").style.height = document.getElementById("Artist_img").offsetHeight+"px";
+        </script>
+
+    Title:
+    </li>
+<li id="Title" style="
+    float: left;
+    width: auto;
+">
+	<h4>{{artid.name}}</h4>
+    </li>
+						<li style="
+    float: left;
+    list-style: none;
+    margin-bottom: 40px;
+    margin-right: 20px;
+">
+
+    Price:
+    </li>
+<li style="
+    float: left;
+    width: auto;
+">
+	<h4>AU${{artid.price}}</h4>
+    </li>
+
+						<li style="float: left;margin-right: 20;margin-bottom: 0;width: min-content;">
+							Dimensions:
+    </li>
+						<li style="
+    width: 60%;
+    display: inline;
+    margin-bottom: 10;
+    float: left;
+    white-space: nowrap;
+">
+							<p style="float: right">cm</p>
+							<h4 style="float: right">{{artid.height}}</h4>
+							<p style="float: right">cmX</p>
+							<h4 style="float: right">{{artid.width}}</h4>
+
+
+
+
+    </li>
+
+
+<li style="
+    float: left;
+    list-style: none;
+    margin-bottom: 40px;
+    margin-right: 20px;
+">
+
+    Postcode:
+    </li>
+<li style="
+    width: auto;
+    margin-bottom: 40px;
+"><a href="www.baidu.com" title="Click to check specific position ">
+	<h4>2602</h4>
+    </a>
+    </li>
+
+						<li style="float: left;margin-right: 20;margin-bottom: 40px;">
+							Description:
+    </li>
+<li style="
+    float: left;
+    width: auto;
+    margin-bottom: auto;
+">
+    <span>{{artid.description}}
+</span></li></ul>
+    <button style="
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 0px;
+    margin-left: 200;
+">
+        Book
+        </button>
 				</div>
 
-	</section>
+	</div>
 	<!-- Blogs section end -->
 
-<div class="container" style="margin-top:-325px;margin-bottom:50px;">
-	<div class="row">
-		<div class="col-sm-0 offset-xl-0">
+<div id="artist_information" class="container" style="padding: 0px;margin: 20px 0px 50px 50px;float: left;display: inline;max-width: 50%;width: 300px;">
+    <script>
+        document.getElementById("artist_information").style.width = document.getElementById("information").offsetWidth + "px";
+        </script>
+	<div class="row" style="
+    /* width: 500px; */
+    flex: 1 0 100%;
+">
+		<div class="col-sm-0 offset-xl-0" style="
+    max-width: 100%;
+">
 			<div class="avatar">
 					<img src="https://www.biography.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cg_face%2Cq_auto:good%2Cw_300/MTU0NjQzOTk4OTQ4OTkyMzQy/ansel-elgort-poses-for-a-portrait-during-the-baby-driver-premiere-2017-sxsw-conference-and-festivals-on-march-11-2017-in-austin-texas-photo-by-matt-winkelmeyer_getty-imagesfor-sxsw-square.jpg" alt="Circle Image" class="rounded-circle img-fluid float-left">
 
 
 
 			</div>
-            <span><h3>{{artid.art_owner}}</h3></span>
+            <span><h3></h3></span>
 </div>
-<div class="col-sm-4 offset-xl-1">
-	<h3> "Art makes life better"</h3>
-    <p style = "text-align: justify;"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam faucibus dolor ipsum, et gravida elit rhoncus sit amet. Duis pulvinar ligula dui. Quisque et interdum ex. Nulla ornare egestas dui, vitae lacinia eros fringilla eu. Nullam ut leo nisi. Pellentesque elementum, erat ac posuere cursus, erat metus placerat orci, id suscipit enim elit non odio. Fusce blandit, elit id efficitur porttitor, metus magna vehicula odio, ac pulvinar lacus lectus sit amet nunc</p>
+<div class="col-sm-4 offset-xl-1" style="
+    padding: 0;
+    flex: 1 0 100%;
+    max-width: 90%;
+">
+	<h3 style="
+    max-width: 100%;
+"> "Art makes life better"</h3>
+    <p style="/* text-align: justify; */max-width: 100%;"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam faucibus dolor ipsum, et gravida elit rhoncus sit amet. Duis pulvinar ligula dui. Quisque et interdum ex. Nulla ornare egestas dui, vitae lacinia eros fringilla eu. Nullam ut leo nisi. Pellentesque elementum, erat ac posuere cursus, erat metus placerat orci, id suscipit enim elit non odio. Fusce blandit, elit id efficitur porttitor, metus magna vehicula odio, ac pulvinar lacus lectus sit amet nunc</p>
 </div>
 </div>
 
-<div class="container" style="margin-left:-80px;margin-top:100px;" >
-	<div class="row">
-		<div class="col-sm-0 offset-xl-0">
-<span><h3> Description</h3></span>
-</div>
 
-<div class="col-sm-9 offset-xl-1">
-    <p> {{artid.art_description}}</p>
-</div>
+
+
 	</div>
 </div>
 
@@ -251,7 +365,12 @@
 
 	<!-- Footer section start -->
 
-	<footer class="page-footer font-small blue-grey lighten-5">
+	<div class="col-sm-9 offset-xl-1" style="
+    margin-bottom: 25px;
+">
+    <p> </p>
+</div>
+<footer class="page-footer font-small blue-grey lighten-5">
 
 	<div style="background-color: orange">
 		<div class="container">
@@ -395,11 +514,12 @@
 
 
 	<!--====== Javascripts & Jquery ======-->
-	<script src={% static "js/jquery-3.2.1.min.js"%}></script>
-	<script src={% static "js/bootstrap.min.js"%}></script>
-	<script src={% static "js/owl.carousel.min.js"%}></script>
-	<script src={% static "js/mixitup.min.js"%}></script>
-	<script src={% static "js/circle-progress.min.js"%}></script>
-	<script src={% static "js/main.js"%}></script>
-</body>
-</html>
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+	<script src="/static/js/owl.carousel.min.js"></script>
+	<script src="/static/js/mixitup.min.js"></script>
+	<script src="/static/js/circle-progress.min.js"></script>
+	<script src="/static/js/main.js"></script>
+
+
+</body></html>
