@@ -30,9 +30,9 @@
 
             {% csrf_token %}
             <h2 class="text-center">Review your order!</h2>
-
             <div class="form-group">The name is {{name}}
                 <input type="text" name="name" value="{{name}}" style="display: none">
+                <input type="text" name="id" value="{{id}}" style="display: none">
             </div>
             <div class="form-group">The price is {{single_price}} (dollars/day)
                 <input type="number" step="1" name="price"  value="{{single_price}}" style="display: none">

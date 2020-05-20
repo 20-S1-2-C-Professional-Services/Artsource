@@ -476,8 +476,6 @@ def upload_artwork(request):
         if len(tags_input.replace(" ", "")) > 0:
             for i in tags_input.split(" "):
                 if i not in tags:
-                    print(i)
-                    print(tags)
                     tags.append(i)
                     new_tag = TagsNames()
                     new_tag.tag_names = i
@@ -541,8 +539,11 @@ def delete_artwork(request):
         if artwork:
             img_addr = os.path.join(os.path.abspath('.'), "media/" + str(artwork.image))
             thumb_addr = os.path.join(os.path.abspath('.'), "media/" + str(artwork.thumbnail))
-            os.remove(img_addr)
-            os.remove(thumb_addr)
+            try:
+                os.remove(img_addr)
+                os.remove(thumb_addr)
+            except Exception as e:
+                print(e)
             artwork.delete()  # delete the record in db
     return redirect('/user/profile/')
 
