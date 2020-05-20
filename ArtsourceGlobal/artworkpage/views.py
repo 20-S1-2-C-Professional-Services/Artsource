@@ -94,7 +94,7 @@ def simplesearch(request):
             q1.children.append(('artists_string__icontains', i))  # search the artist name string
         search_result = Artwork.objects.filter(q1)
         if len(search_result) == 0:
-            message = 'Nothing found, try other tags'
+            message = 'Nothing found, try other input'
             return render(request, 'artworks/search.html', {'message': message})
 
         for i in search_result:
