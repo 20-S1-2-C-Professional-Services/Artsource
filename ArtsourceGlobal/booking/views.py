@@ -26,7 +26,13 @@ from django.template.loader import get_template
 ## Works out how long the user is staying in a hotel for also working out the total cost.
 def bookArt(request, pk):
     art_id = int(float(pk))
-    artwork = Artwork.objects.get(id=art_id)
+    try:
+        artwork = Artwork.objects.get(id=art_id)
+
+    except Exception as e:
+        print(e)
+        message = "This artwork was not exist!"
+        return render(request, 'user/index.html', locals())
 
     if artwork.booked is None:
         message = "This artwork was booked out already!"
@@ -53,18 +59,19 @@ def bookArt(request, pk):
             total_price_booking = calc_price(artwork.price, delta.days)
             return render(request, 'booking/confirmbooking.html',
                           {'checkin': checkin, 'checkout': checkout, 'name': artwork.name,
-                           'single_price': artwork.price, 'duration': delta,
+                           'single_price': artwork.price, 'duration': delta, 'id': art_id,
                            'total_price': total_price_booking})
 
 
 def finish_booking(request):
     if request.method == 'POST':
+        art_id = int(float(request.POST.get('id')))
         artwork_name = request.POST.get('name')
         checkin = request.POST.get('checkin')
         checkout = request.POST.get('checkout')
         total_price = request.POST.get('total_price')
         duration = request.POST.get('duration')
-        artwork = Artwork.objects.get(name=artwork_name)
+        artwork = Artwork.objects.get(id=art_id)
         reservation = Reservation()
         reservation.artwork_booked = artwork
         reservation.owner = artwork.user
@@ -132,7 +139,7 @@ def cancel(request):
         artwork = Artwork.objects.get(name=artwork_name)
         artwork.booked = True
         if artwork.artwork_booked is not None:
-            record = Reservation.objects.get(id=artwork.artwork_booked.first().id) # get the reservation record here
+            record = Reservation.objects.get(id=artwork.artwork_booked.first().id)  # get the reservation record here
 
             send_notify_email(record.renter.email, record.renter.username, artwork_name, 'cancel')
             send_notify_email(record.owner.email, record.owner.username, artwork_name, 'cancel')
