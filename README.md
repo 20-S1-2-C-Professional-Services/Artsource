@@ -28,6 +28,11 @@ Soon to be rebranded as Remarkable Art, Artsource Global is a platform designed 
 1) Artist sign up
 2) Look at the front end interface for selection. 
 
+**Design Philosophy**
+Jill has told us that the main issue with creating sales between artists and renters is that people who would like to rent art are often discouraged because they are unable to decide on what to buy. Jill often remedies this by conversing with renters directly and making her own suggestions, however in implementing a website we are largely limiting this conversational element so a different approach is necessary. Noting this concern we have done our best to design the site in such a way that it is easy to quickly explore a variety of different types of artwork and even easier to go from browsing artwork to requesting to rent artwork- with only a few clicks necessary!
+
+Jill has access to some great mentors due to her business being selected to receive further support during a startup competition, so we are trying to avoid putting too much effort into specific fonts, colour schemes etc. since Jill has access to some awesome graphic designers who will probably have lots of input on that front. Instead we are focusing on designing a website which is scalable, simplistic and easily customisable- we prioritise how we *display* elements rather than the aesthetics of the elements themselves. Once we achieve this, future developers can focus on iteratively improving these design elements.
+
 
 # **Directory**
 
